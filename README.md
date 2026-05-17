@@ -40,7 +40,23 @@ Funciona con **opencode** y **antigravity**. No requiere el paquete `superpowers
 
 ## Instalación
 
-### Desde GitHub (recomendado)
+### Instalación Remota (One-Liner Rápida) 🚀
+
+Si quieres instalar o actualizar OpenSkills directamente desde la web sin necesidad de clonar o descargar manualmente:
+
+#### En Windows (PowerShell)
+```powershell
+irm https://raw.githubusercontent.com/fabianmelomaciel/OpenSkills/main/remote-install.ps1 | iex
+```
+
+#### En Linux/Mac (Bash)
+```bash
+curl -fsSL https://raw.githubusercontent.com/fabianmelomaciel/OpenSkills/main/remote-install.sh | bash
+```
+
+---
+
+### Desde GitHub (clonado manual)
 
 #### En Windows (opencode)
 
