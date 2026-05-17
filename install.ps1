@@ -3,6 +3,41 @@ param(
     [switch]$Help
 )
 
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$skillsDir = Join-Path -Path $scriptDir -ChildPath "skills"
+
+function InstallToDir($target, $source) {
+    if (-not $source) { $source = $scriptDir }
+    Write-Host "`nInstalando OpenSkills en: $target" -ForegroundColor Cyan
+    New-Item -ItemType Directory -Path $target -Force | Out-Null
+    $skillDirs = Get-ChildItem -LiteralPath "$source\skills" -Directory
+    foreach ($skill in $skillDirs) {
+        $destPath = Join-Path -Path "$target\skills" -ChildPath $skill.Name
+        Write-Host "  Copiando: $($skill.Name)..." -ForegroundColor Gray
+        Remove-Item -LiteralPath $destPath -Recurse -Force -ErrorAction SilentlyContinue
+        Copy-Item -LiteralPath $skill.FullName -Destination $destPath -Recurse -Force
+    }
+    Copy-Item -LiteralPath "$source\install.ps1" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+    Copy-Item -LiteralPath "$source\install.sh" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+    Copy-Item -LiteralPath "$source\README.md" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+    Copy-Item -LiteralPath "$source\package.json" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+    Copy-Item -LiteralPath "$source\.gitignore" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+    Write-Host "  Listo: $($skillDirs.Count) skills instaladas" -ForegroundColor Green
+}
+
+function InstallToOpendir($source) {
+    $targetCore = "$env:USERPROFILE\.config\opencode\skills"
+    Write-Host "`nInstalando skills directamente en opencode skills/..." -ForegroundColor Cyan
+    $skillDirs = Get-ChildItem -LiteralPath "$source\skills" -Directory
+    foreach ($skill in $skillDirs) {
+        $destPath = Join-Path -Path $targetCore -ChildPath $skill.Name
+        Remove-Item -LiteralPath $destPath -Recurse -Force -ErrorAction SilentlyContinue
+        Copy-Item -LiteralPath $skill.FullName -Destination $destPath -Recurse -Force
+        Write-Host "  Instalado: $($skill.Name)" -ForegroundColor Gray
+    }
+    Write-Host "  $($skillDirs.Count) skills instaladas en opencode" -ForegroundColor Green
+}
+
 if ($Help) {
     Write-Host @"
 OpenSkills Installer
@@ -19,18 +54,13 @@ SIN PARAMETROS: Detecta opencode o antigravity y instala alli.
     exit 0
 }
 
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$skillsDir = Join-Path -Path $scriptDir -ChildPath "skills"
-
 if (-not (Test-Path -LiteralPath $skillsDir)) {
     Write-Host "ERROR: No se encuentra el directorio skills/ en $scriptDir" -ForegroundColor Red
     exit 1
 }
 
-# Detectar destino si no se especifico
 if (-not $TargetDir) {
     $detected = @()
-
     $opencodeDir = "$env:USERPROFILE\.config\opencode\openskills"
     $antigravityDir = "$env:USERPROFILE\.config\antigravity\openskills"
 
@@ -49,9 +79,7 @@ if (-not $TargetDir) {
         Write-Host "Detectado: $($detected[0].Name) -> $TargetDir" -ForegroundColor Green
     } else {
         Write-Host "Detectados opencode y antigravity. Instalando en ambos..." -ForegroundColor Green
-        foreach ($d in $detected) {
-            InstallToDir $d.Path
-        }
+        foreach ($d in $detected) { InstallToDir $d.Path $scriptDir }
         InstallToOpendir $scriptDir
         Write-Host "`nInstalacion completa en ambos!" -ForegroundColor Green
         return
@@ -59,70 +87,3 @@ if (-not $TargetDir) {
 }
 
 InstallToDir $TargetDir $scriptDir
-
-function InstallToDir($target, $source) {
-    if (-not $source) { $source = $scriptDir }
-
-    Write-Host "`nInstalando OpenSkills en: $target" -ForegroundColor Cyan
-
-    # Crear directorio destino
-    New-Item -ItemType Directory -Path $target -Force | Out-Null
-
-    # Copiar skills (solo directorios, no archivos sueltos)
-    $skillDirs = Get-ChildItem -LiteralPath "$source\skills" -Directory
-    foreach ($skill in $skillDirs) {
-        $destPath = Join-Path -Path "$target\skills" -ChildPath $skill.Name
-        Write-Host "  Copiando: $($skill.Name)..." -ForegroundColor Gray
-        Remove-Item -LiteralPath $destPath -Recurse -Force -ErrorAction SilentlyContinue
-        Copy-Item -LiteralPath $skill.FullName -Destination $destPath -Recurse -Force
-    }
-
-    # Copiar installers y docs
-    Copy-Item -LiteralPath "$source\install.ps1" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\install.sh" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\README.md" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\package.json" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\.gitignore" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-
-    # Configurar opencode.json si es opencode
-    $configPath = "$env:USERPROFILE\.config\opencode\opencode.json"
-    if (Test-Path -LiteralPath $configPath) {
-        try {
-            $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
-            $skillsPath = "C:\\laragon\\www\\OpenSkills\\skills\\core"
-            if ($config.skills.paths -notcontains $skillsPath) {
-                Write-Host "  Agregando ruta a opencode.json..." -ForegroundColor Yellow
-                # Nota: la config manual se maneja en el README
-            }
-        } catch {}
-    }
-
-    Write-Host "  Listo: $($skillDirs.Count) skills instaladas" -ForegroundColor Green
-}
-
-# Instalar en opencode directamente desde www
-function InstallToOpendir($source) {
-    $targetCore = "$env:USERPROFILE\.config\opencode\skills"
-    Write-Host "`nInstalando skills directamente en opencode skills/..." -ForegroundColor Cyan
-    $skillDirs = Get-ChildItem -LiteralPath "$source\skills" -Directory
-    foreach ($skill in $skillDirs) {
-        $destPath = Join-Path -Path $targetCore -ChildPath $skill.Name
-        Remove-Item -LiteralPath $destPath -Recurse -Force -ErrorAction SilentlyContinue
-        Copy-Item -LiteralPath $skill.FullName -Destination $destPath -Recurse -Force
-        Write-Host "  Instalado: $($skill.Name)" -ForegroundColor Gray
-    }
-    Write-Host "  $($skillDirs.Count) skills instaladas en opencode" -ForegroundColor Green
-}
-
-<#
-.SYNOPSIS
-    Instala OpenSkills en opencode o antigravity.
-.DESCRIPTION
-    Copia todas las skills al directorio de skills de la herramienta detectada.
-    Soporta opencode y antigravity automaticamente.
-.PARAMETER TargetDir
-    Ruta personalizada de instalacion. Si no se especifica, detecta automaticamente.
-.EXAMPLE
-    .\install.ps1
-    .\install.ps1 -TargetDir "C:\Users\usuario\.config\opencode\openskills"
-#>
