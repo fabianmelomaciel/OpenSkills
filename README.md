@@ -138,6 +138,40 @@ Los agentes `project-manager`, `creador-contenido-redes` y `auditor-de-seguridad
 
 ---
 
+## 🧠 Aprendizaje Dinámico (Sistema CODEX)
+
+OpenSkills incorpora un **Bucle de Memoria Persistente Compartida** a través del sistema **CODEX**. Esto permite que los agentes aprendan activamente de tu entorno de desarrollo local y eviten cometer los mismos errores o gotchas técnicos en el futuro.
+
+### ¿Cómo funciona el aprendizaje?
+1. **Lectura Activa:** Al iniciar una tarea, el agente busca y lee el archivo `CODEX.md` (buscando hacia arriba desde su carpeta o en el directorio raíz de ejecución).
+2. **Aplicación de Lecciones:** Adapta sus decisiones y comandos de acuerdo con las configuraciones y gotchas específicos de tu máquina documentados allí (como versiones de PHP, puertos de bases de datos, etc.).
+3. **Escritura en Caliente:** Si durante la tarea el agente descubre un patrón de error del entorno, soluciona un bug de configuración complejo o aprende una directiva del proyecto, **edita el archivo `CODEX.md` para registrar el aprendizaje** en la sección de Mission Logs.
+
+> [!NOTE]
+> **Preservación de Memoria:** Los instaladores (`install.ps1` y `install.sh`) están configurados para instalar `CODEX.md` **únicamente si no existe**. Si ya hay un archivo `CODEX.md` en tu directorio local activo, el instalador lo conservará intacto. ¡Tu memoria de aprendizaje agéntica acumulada está 100% protegida!
+
+---
+
+## 🎨 Report Dashboards Visuales Premium
+
+Los agentes de análisis ahora generan reportes visuales de primer nivel (diseñados con Vanilla HTML5, CSS3, animaciones de transición, dark-mode y glassmorphism) ubicados en su subcarpeta `/reports`:
+
+### 🔒 1. Dashboard de Auditoría de Seguridad (`auditor-de-seguridad`)
+Generado dinámicamente usando la plantilla [dashboard-template.html](file:///c:/laragon/www/OpenSkills/skills/auditor-de-seguridad/reports/dashboard-template.html).
+* **Métricas en Rejilla (Stats Grid):** Conteo visual rápido de vulnerabilidades críticas, altas, medias y bajas con sombras luminosas (glow-effects).
+* **Acordeones Interactivos:** Expande o contrae los hallazgos haciendo clic en ellos (desarrollado con transiciones CSS fluidas).
+* **Remediación Focalizada:** Tarjetas con colores de advertencia según la severidad para guiar al desarrollador en la solución.
+* **Visor de Código:** Bloques oscuros estilizados tipo terminal con tipografía monospace para examinar los fragmentos vulnerables.
+
+### 📱 2. Planificador Editorial de Contenido (`creador-contenido-redes`)
+Generado usando la plantilla [content-template.html](file:///c:/laragon/www/OpenSkills/skills/creador-contenido-redes/reports/content-template.html).
+* **Ganchos Virales:** Caja interactiva que despliega los ganchos recomendados para los primeros 3 segundos junto con sugerencias de gesticulación o tomas.
+* **Clips Sugeridos:** Listas ordenadas con marcas de tiempo óptimas para recortar fragmentos virales de alto impacto.
+* **Optimización Multiplataforma por Pestañas:** Un sistema interactivo que te permite alternar dinámicamente entre **TikTok**, **Instagram Reels** y **YouTube Shorts**, con temáticas visuales de color propias de cada red.
+* **Cajas de Copiado Rápido (Copy-to-Clipboard):** Botones inteligentes integrados que con un solo clic copian la descripción o hashtags al portapapeles y muestran feedback visual en color verde (`¡Copiado!`).
+
+---
+
 ## Skills personalizadas
 
 Puedes crear tus propias skills en `skills/` y contribuirlas via Pull Request.
