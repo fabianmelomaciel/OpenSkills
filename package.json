@@ -1,0 +1,12 @@
+{
+  "name": "openskills",
+  "version": "1.0.0",
+  "description": "Portable AI assistant skills collection for opencode, antigravity, and AI coding tools",
+  "keywords": ["opencode", "antigravity", "skills", "ai-coding", "vibecoding", "security-auditor"],
+  "author": "Fabian Melo Maciel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabianmelomaciel/OpenSkills.git"
+  }
+}
