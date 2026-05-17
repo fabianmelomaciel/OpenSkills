@@ -32,7 +32,7 @@ Funciona de manera autónoma con **opencode** y **antigravity**.
 
 | Agente | Descripción |
 |--------|-------------|
-| `orquestador` | Escucha al CEO, planea, delega a subagentes, revisa y reporta |
+| `project-manager` | Escucha al CEO, planea, delega a subagentes, revisa y reporta |
 | `creador-contenido-redes` | Analiza videos y optimiza contenido para redes sociales |
 | `auditor-de-seguridad` | Escanea proyectos buscando vulnerabilidades, secrets, SAST, dependencias, infraestructura, DB y CI/CD |
 
@@ -106,7 +106,7 @@ Luego agrega las rutas a tu configuración:
   "skills": {
     "paths": [
       "~/.config/opencode/openskills/skills/core",
-      "~/.config/opencode/openskills/skills/orquestador",
+      "~/.config/opencode/openskills/skills/project-manager",
       "~/.config/opencode/openskills/skills/creador-contenido-redes",
       "~/.config/opencode/openskills/skills/auditor-de-seguridad"
     ]
@@ -128,9 +128,9 @@ En opencode/antigravity, los skills se cargan automáticamente según la tarea. 
 
 ### Agentes primarios
 
-Los agentes `orquestador`, `creador-contenido-redes` y `auditor-de-seguridad` se configuran como agentes primarios. Puedes invocarlos directamente:
+Los agentes `project-manager`, `creador-contenido-redes` y `auditor-de-seguridad` se configuran como agentes primarios. Puedes invocarlos directamente:
 
-> "@orquestador necesito construir un login"
+> "@project-manager necesito construir un login"
 
 > "@creador-contenido-redes optimiza este video"
 
