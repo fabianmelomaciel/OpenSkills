@@ -4,7 +4,7 @@
 
 OpenSkills es una colección de skills (agentes de IA) que te ayudan a desarrollar software mejor: desde brainstorming yplanificación hasta testing de seguridad y revisión de código.
 
-Funciona con **opencode** y **antigravity**. No requiere el paquete `superpowers` — es un reemplazo completo y autónomo.
+Funciona de manera autónoma con **opencode** y **antigravity**.
 
 ---
 
