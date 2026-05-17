@@ -49,6 +49,16 @@ cp "$SCRIPT_DIR/package.json" "$TARGET/" 2>/dev/null || true
 cp "$SCRIPT_DIR/.gitignore" "$TARGET/" 2>/dev/null || true
 cp "$SCRIPT_DIR/install.sh" "$TARGET/" 2>/dev/null || true
 
+# Copiar CODEX.md si no existe
+if [ -f "$SCRIPT_DIR/CODEX.md" ]; then
+    if [ ! -f "$TARGET/CODEX.md" ]; then
+        cp "$SCRIPT_DIR/CODEX.md" "$TARGET/"
+        echo "  CODEX.md instalado por primera vez."
+    else
+        echo "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)."
+    fi
+fi
+
 echo ""
 echo "Instalacion completa! $COUNT skills instaladas."
 echo ""

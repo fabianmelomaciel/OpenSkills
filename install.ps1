@@ -22,6 +22,18 @@ function InstallToDir($target, $source) {
     Copy-Item -LiteralPath "$source\README.md" -Destination "$target\" -Force -ErrorAction SilentlyContinue
     Copy-Item -LiteralPath "$source\package.json" -Destination "$target\" -Force -ErrorAction SilentlyContinue
     Copy-Item -LiteralPath "$source\.gitignore" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+    
+    # Copiar CODEX.md si no existe para preservar memoria acumulada
+    $codexSrc = Join-Path -Path $source -ChildPath "CODEX.md"
+    $codexDest = Join-Path -Path $target -ChildPath "CODEX.md"
+    if (Test-Path -LiteralPath $codexSrc) {
+        if (-not (Test-Path -LiteralPath $codexDest)) {
+            Copy-Item -Path $codexSrc -Destination $codexDest -Force
+            Write-Host "  CODEX.md instalado por primera vez." -ForegroundColor Gray
+        } else {
+            Write-Host "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)." -ForegroundColor Yellow
+        }
+    }
     Write-Host "  Listo: $($skillDirs.Count) skills instaladas" -ForegroundColor Green
 }
 
