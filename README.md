@@ -2,7 +2,7 @@
 
 **Skills portables para opencode y antigravity.**
 
-OpenSkills es una colección de skills (agentes de IA) que te ayudan a desarrollar software mejor: desde brainstorming yplanificación hasta testing de seguridad y revisión de código.
+OpenSkills es una colección de skills (agentes de IA) que te ayudan a desarrollar software mejor: desde brainstorming y planificación hasta testing de seguridad y revisión de código.
 
 Funciona de manera autónoma con **opencode** y **antigravity**.
 
