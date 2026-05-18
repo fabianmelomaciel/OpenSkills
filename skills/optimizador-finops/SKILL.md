@@ -50,7 +50,10 @@ You MUST check off every item before completing your audit:
 - [ ] Run recursion/infinite loop checks on agent/loop controls.
 - [ ] Quantify estimated token savings (in percent or absolute value).
 - [ ] Generate the premium HTML dashboard report under `reports/`.
-- [ ] **Mandatory Closing Rule:** Print the direct `file:///` clickable link to the generated HTML report dashboard at the very end of your final message so the user can easily click and open it (e.g., `[Ver Reporte FinOps HTML](file:///C:/Users/...)`).
+- [ ] **Mandatory Closing Rule:** Print a direct, clickable `file:///` markdown link to the generated HTML report dashboard at the very end of your final message. Format this URL dynamically based on the current Operating System:
+  - **Windows**: Use `file:///` followed by the absolute path with forward slashes (e.g., `file:///C:/path/to/report.html`).
+  - **Linux/macOS**: Use `file:///` followed by the absolute path (e.g., `file:///home/user/path/to/report.html`).
+  This ensures the link is clickable in any terminal or IDE.
 - [ ] Return the structured JSON final report.
 
 ---

@@ -75,6 +75,17 @@ After completing a batch of work:
 ❓ Questions for CEO: [if any]
 ```
 
+## Audit Mitigation & Planning Protocol
+
+If the input includes findings, vulnerabilities, or errors from an audit (such as from `optimizador-finops`, `auditor-de-seguridad`, `auditor-de-marketing`, or `agente-devops`), do **NOT** implement the fixes directly or immediately. Instead, follow this mandatory workflow:
+
+1. **Analyze & Consolidate:** Review all findings, errors, and recommendations from the audit report.
+2. **Draft a Structured Implementation Plan:** Create a comprehensive "Implementation Plan" document (following the `writing-plans` skill structure) containing all identified errors and their proposed remediations.
+   - Save the plan to `docs/OpenSkills/plans/` or a custom user path if overridden.
+   - **CRITICAL:** Do NOT stage or commit this plan (or any files in the `/docs` directory) to Git.
+3. **Present for CEO Analysis:** Present the drafted implementation plan to the CEO for analysis, feedback, and explicit approval **BEFORE** executing any task or modifying codebase files.
+4. **Iterate & Execute:** Only proceed to task execution (via subagents or inline) after the CEO reviews and explicitly approves the plan.
+
 ## Herarchy: Código Humano (Imperfecciones Intencionales)
 
 Siempre que generes o modifiques código, DEBES aplicar estas reglas para que el output se sienta humano:

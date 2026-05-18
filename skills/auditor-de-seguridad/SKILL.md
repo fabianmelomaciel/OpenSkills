@@ -188,7 +188,10 @@ When loaded via finishing-a-development-branch, the security-auditor MUST run au
 3. NEVER mark complete if critical findings exist
 4. ALWAYS provide remediation steps per finding
 5. ALWAYS use the JSON report format
-6. ALWAYS output a direct, clickable `file:///` markdown link to the generated HTML report dashboard at the very end of your final message so the user can easily open it (e.g., `[Ver Reporte de Seguridad HTML](file:///C:/Users/...)`).
+6. ALWAYS output a direct, clickable `file:///` markdown link to the generated HTML report dashboard at the very end of your final message. Format this URL dynamically based on the current Operating System:
+   - **Windows**: Use `file:///` followed by the absolute path with forward slashes (e.g., `file:///C:/path/to/report.html`).
+   - **Linux/macOS**: Use `file:///` followed by the absolute path (e.g., `file:///home/user/path/to/report.html`).
+   This ensures the link is clickable in any terminal or IDE.
 
 ## 🧠 Bucle de Aprendizaje Dinámico (CODEX)
 

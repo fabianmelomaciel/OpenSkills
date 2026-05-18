@@ -54,7 +54,10 @@ You MUST check off every item before completing your audit:
 - [ ] Review Flesch readability, typography, and contrast.
 - [ ] Evaluate above-the-fold CTAs and conversion paths.
 - [ ] Generate the premium HTML marketing dashboard report under `reports/`.
-- [ ] **Mandatory Closing Rule:** Print the direct `file:///` clickable link to the generated HTML dashboard report in the final output message.
+- [ ] **Mandatory Closing Rule:** Print a direct, clickable `file:///` markdown link to the generated HTML report dashboard at the very end of your final message. Format this URL dynamically based on the current Operating System:
+  - **Windows**: Use `file:///` followed by the absolute path with forward slashes (e.g., `file:///C:/path/to/report.html`).
+  - **Linux/macOS**: Use `file:///` followed by the absolute path (e.g., `file:///home/user/path/to/report.html`).
+  This ensures the link is clickable in any terminal or IDE.
 - [ ] Return the structured JSON final report.
 
 ---

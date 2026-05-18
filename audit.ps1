@@ -183,7 +183,12 @@ if (Test-Path -LiteralPath $templateFile) {
         Start-Process $ReportPath
     } catch {}
     
-    $reportUri = "file:///" + $ReportPath.Replace("\", "/")
+    $formattedPath = $ReportPath.Replace("\", "/")
+    if ($formattedPath.StartsWith("/")) {
+        $reportUri = "file://" + $formattedPath
+    } else {
+        $reportUri = "file:///" + $formattedPath
+    }
     Write-Host "Ver Reporte de Seguridad HTML en tu navegador: $reportUri`n" -ForegroundColor Green
 } else {
     Write-Host "ERROR: Plantilla de reporte no encontrada en $templateFile" -ForegroundColor Red
