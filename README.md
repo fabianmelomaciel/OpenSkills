@@ -175,6 +175,12 @@ Generado dinámicamente usando la plantilla [dashboard-template.html](file:///c:
 * **Remediación Focalizada:** Tarjetas con colores de advertencia según la severidad para guiar al desarrollador en la solución.
 * **Visor de Código:** Bloques oscuros estilizados tipo terminal con tipografía monospace para examinar los fragmentos vulnerables.
 
+> 💡 **¿Ya tienes un JSON de auditoría?** Usa `generate-report-from-json.ps1` para convertirlo al dashboard premium sin tener que re-ejecutar los scanners:
+> ```powershell
+> .\generate-report-from-json.ps1 -JsonPath .\mi-proyecto\security-audit-report.json
+> ```
+
+
 ### 💰 2. Dashboard de Optimización FinOps (`optimizador-finops`)
 Generado usando la plantilla [finops-template.html](file:///c:/laragon/www/OpenSkills/skills/optimizador-finops/reports/finops-template.html).
 * **Eficiencia de Costes (Amber/Gold Theme):** Métricas clave como el ahorro de tokens estimado, redundancia de prompts e índices de llamadas a APIs.
