@@ -127,14 +127,39 @@ cp "$SCRIPT_DIR/package.json" "$TARGET/" 2>/dev/null || true
 cp "$SCRIPT_DIR/.gitignore" "$TARGET/" 2>/dev/null || true
 cp "$SCRIPT_DIR/install.sh" "$TARGET/" 2>/dev/null || true
 
-# Copiar CODEX.md si no existe
-if [ -f "$SCRIPT_DIR/CODEX.md" ]; then
-    if [ ! -f "$TARGET/CODEX.md" ]; then
-        cp "$SCRIPT_DIR/CODEX.md" "$TARGET/"
-        echo "  CODEX.md instalado por primera vez."
-    else
-        echo "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)."
-    fi
+# Generar CODEX.md si no existe (es local-only, no está en el repo)
+if [ ! -f "$TARGET/CODEX.md" ]; then
+    cat > "$TARGET/CODEX.md" << 'CODEX_EOF'
+# 🧠 OpenSkills: Tactical CODEX (Learning Memory)
+
+This file is the shared, evolving memory of the OpenSkills agent squad. It tracks
+environment-specific patterns, technical gotchas, and lessons learned to avoid
+repeating the same mistakes.
+
+> [!IMPORTANT]
+> This file is **local-only** and listed in .gitignore. Never commit it to a
+> public repository — it may contain project-specific paths and patterns.
+
+## 🧠 Environment & Core Intelligence
+
+- **Host OS**: *(e.g. Ubuntu 22.04 / macOS Ventura / Windows PowerShell 5.1)*
+- **Active Workspace**: *(e.g. ~/projects/my-app — PHP SaaS)*
+- **Stack**: *(e.g. PHP 8.x, MySQL, nginx, cURL)*
+
+## 🛠️ Technical Gotchas & Environment Lessons
+
+- Deployment scripts (git.php, deploy.sh, etc.) must never be reachable from the
+  public web. Block in .htaccess or exclude from FTP sync. Classify as HIGH/CRITICAL
+  in audits if found exposed.
+- .env files must always be in .gitignore. Never commit secrets.
+
+## 💻 Mission Logs & Tactical Learnings
+
+- [YYYY-MM-DD] - (Short title) — (What happened, root cause, fix, what to do differently next time.)
+CODEX_EOF
+    echo "  CODEX.md generado por primera vez (local-only)."
+else
+    echo "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)."
 fi
 
 echo ""

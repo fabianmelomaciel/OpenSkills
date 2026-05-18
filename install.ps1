@@ -23,16 +23,41 @@ function InstallToDir($target, $source) {
     Copy-Item -LiteralPath "$source\package.json" -Destination "$target\" -Force -ErrorAction SilentlyContinue
     Copy-Item -LiteralPath "$source\.gitignore" -Destination "$target\" -Force -ErrorAction SilentlyContinue
     
-    # Copiar CODEX.md si no existe para preservar memoria acumulada
-    $codexSrc = Join-Path -Path $source -ChildPath "CODEX.md"
+    # Generar CODEX.md si no existe en destino (es local-only, no está en el repo)
     $codexDest = Join-Path -Path $target -ChildPath "CODEX.md"
-    if (Test-Path -LiteralPath $codexSrc) {
-        if (-not (Test-Path -LiteralPath $codexDest)) {
-            Copy-Item -Path $codexSrc -Destination $codexDest -Force
-            Write-Host "  CODEX.md instalado por primera vez." -ForegroundColor Gray
-        } else {
-            Write-Host "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)." -ForegroundColor Yellow
-        }
+    if (-not (Test-Path -LiteralPath $codexDest)) {
+        $codexTemplate = @"
+# 🧠 OpenSkills: Tactical CODEX (Learning Memory)
+
+This file is the shared, evolving memory of the OpenSkills agent squad. It tracks
+environment-specific patterns, technical gotchas, and lessons learned to avoid
+repeating the same mistakes.
+
+> [!IMPORTANT]
+> This file is **local-only** and listed in .gitignore. Never commit it to a
+> public repository — it may contain project-specific paths and patterns.
+
+## 🧠 Environment & Core Intelligence
+
+- **Host OS**: *(e.g. Windows PowerShell 5.1 / Ubuntu 22.04)*
+- **Active Workspace**: *(e.g. C:\projects\my-app — PHP SaaS)*
+- **Stack**: *(e.g. PHP 8.x, MySQL, Laragon, cURL)*
+
+## 🛠️ Technical Gotchas & Environment Lessons
+
+- Deployment scripts (git.php, deploy.sh, etc.) must never be reachable from the
+  public web. Block in .htaccess or exclude from FTP sync. Classify as HIGH/CRITICAL
+  in audits if found exposed.
+- .env files must always be in .gitignore. Never commit secrets.
+
+## 💻 Mission Logs & Tactical Learnings
+
+- [YYYY-MM-DD] - (Short title) — (What happened, root cause, fix, what to do differently next time.)
+"@
+        $codexTemplate | Out-File -FilePath $codexDest -Encoding utf8 -Force
+        Write-Host "  CODEX.md generado por primera vez (local-only)." -ForegroundColor Gray
+    } else {
+        Write-Host "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)." -ForegroundColor Yellow
     }
     Write-Host "  Listo: $($skillDirs.Count) skills instaladas" -ForegroundColor Green
 }
