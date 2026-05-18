@@ -35,6 +35,8 @@ Funciona de manera autónoma con **opencode** y **antigravity**.
 | `project-manager` | Escucha al CEO, planea, delega a subagentes, revisa y reporta |
 | `optimizador-finops` | Realiza auditoría de calidad SQA de consumo de tokens y APIs de IA (conforme a ISO 31000) |
 | `agente-devops` | Diseña y audita empaquetado seguro en contenedores Docker y flujos de CI/CD (conforme a IEEE 730 e ISO 27001) |
+| `auditor-de-marketing` | Audita optimización SEO On-Page, OpenGraph en redes y CTAs de conversión en el sitio web |
+| `gestor-documental` | Diseña y valida especificaciones técnicas y académicas (Normas APA, ISO 29148, ISO 29119) |
 | `auditor-de-seguridad` | Escanea proyectos buscando vulnerabilidades, secrets, SAST, dependencias, infraestructura, DB y CI/CD |
 
 ---
@@ -110,6 +112,8 @@ Luego agrega las rutas a tu configuración:
       "~/.config/opencode/openskills/skills/project-manager",
       "~/.config/opencode/openskills/skills/optimizador-finops",
       "~/.config/opencode/openskills/skills/agente-devops",
+      "~/.config/opencode/openskills/skills/auditor-de-marketing",
+      "~/.config/opencode/openskills/skills/gestor-documental",
       "~/.config/opencode/openskills/skills/auditor-de-seguridad"
     ]
   }
@@ -130,13 +134,17 @@ En opencode/antigravity, los skills se cargan automáticamente según la tarea. 
 
 ### Agentes primarios
 
-Los agentes `project-manager`, `optimizador-finops`, `agente-devops` y `auditor-de-seguridad` se configuran como agentes primarios. Puedes invocarlos directamente:
+Los agentes `project-manager`, `optimizador-finops`, `agente-devops`, `auditor-de-marketing`, `gestor-documental` y `auditor-de-seguridad` se configuran como agentes primarios. Puedes invocarlos directamente:
 
 > "@project-manager necesito construir un login"
 
 > "@optimizador-finops optimiza el consumo de este prompt"
 
 > "@agente-devops crea un Dockerfile seguro"
+
+> "@auditor-de-marketing audita el SEO y conversiones de este sitio"
+
+> "@gestor-documental formatea este reporte en normas APA"
 
 > "@auditor-de-seguridad escanea este proyecto"
 
@@ -158,7 +166,7 @@ OpenSkills incorpora un **Bucle de Memoria Persistente Compartida** a través de
 
 ## 🎨 Report Dashboards Visuales Premium
 
-Los agentes de análisis ahora generan reportes visuales de primer nivel (diseñados con Vanilla HTML5, CSS3, animaciones de transición, dark-mode y glassmorphism) ubicados en su subcarpeta `/reports`:
+Los agentes de análisis ahora generan reportes visuales de primer nivel (diseñados con Vanilla HTML5, CSS3, animaciones de transición, dark-mode y glassmorphism) ubicados en su subcarpeta `/reports` y **proveen un enlace directo clickable `file:///` al final de su ejecución** para abrirlos instantáneamente en tu navegador.
 
 ### 🔒 1. Dashboard de Auditoría de Seguridad (`auditor-de-seguridad`)
 Generado dinámicamente usando la plantilla [dashboard-template.html](file:///c:/laragon/www/OpenSkills/skills/auditor-de-seguridad/reports/dashboard-template.html).
@@ -178,6 +186,11 @@ Generado usando la plantilla [devops-template.html](file:///c:/laragon/www/OpenS
 * **Mapeo de Calidad de Configuración (Electric Blue Theme):** Puntuación global SCM (SCM Quality Score), estado de privilegios root y pinning de dependencias.
 * **Auditoría de Entornos (IEEE 730 & ISO 27001):** Validaciones sobre imágenes base de Dockerfiles, docker-compose y GitHub Actions.
 * **Scaffolding Seguro:** Plantillas listas de Dockerfile y Compose libres de vulnerabilidades con botones de copiado rápido interactivos.
+
+### 📢 4. Dashboard de Optimización de Marketing & SEO (`auditor-de-marketing`)
+Generado usando la plantilla [marketing-template.html](file:///c:/laragon/www/OpenSkills/skills/auditor-de-marketing/reports/marketing-template.html).
+* **Calidad de Crecimiento (Sunset Coral Theme):** Muestra el On-Page SEO score, estado de etiquetas OpenGraph para redes sociales e índice de conversión de CTAs.
+* **Auditoría de Embudo:** Identifica elementos críticos sobre/bajo el pliegue (above/below the fold) y sugiere código HTML optimizado con botones interactivos.
 
 ---
 

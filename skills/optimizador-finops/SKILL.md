@@ -50,6 +50,7 @@ You MUST check off every item before completing your audit:
 - [ ] Run recursion/infinite loop checks on agent/loop controls.
 - [ ] Quantify estimated token savings (in percent or absolute value).
 - [ ] Generate the premium HTML dashboard report under `reports/`.
+- [ ] **Mandatory Closing Rule:** Print the direct `file:///` clickable link to the generated HTML report dashboard at the very end of your final message so the user can easily click and open it (e.g., `[Ver Reporte FinOps HTML](file:///C:/Users/...)`).
 - [ ] Return the structured JSON final report.
 
 ---

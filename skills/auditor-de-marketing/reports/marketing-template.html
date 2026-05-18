@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Crecimiento y SEO - OpenSkills</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: rgba(31, 40, 51, 0.45);
+            --border-color: rgba(255, 107, 107, 0.15);
+            --primary: #ff6b6b;
+            --primary-glow: rgba(255, 107, 107, 0.3);
+            --text-color: #abbacb;
+            --text-light: #ffffff;
+            --critical: #ff3838;
+            --high: #ff9f1a;
+            --medium: #3ae374;
+            --low: #17c0eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 10% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(31, 40, 51, 0.2) 0%, transparent 50%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--text-light);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-marketing {
+            background-color: rgba(255, 107, 107, 0.15);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+
+        .stat-val {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+
+        .findings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .finding-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: border-color 0.3s ease;
+        }
+
+        .finding-item:hover {
+            border-color: rgba(255, 107, 107, 0.4);
+        }
+
+        .finding-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .finding-title-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .finding-title {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .severity-badge {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .sev-critical { background: rgba(255, 56, 86, 0.2); color: var(--critical); border: 1px solid var(--critical); }
+        .sev-high { background: rgba(255, 159, 26, 0.2); color: var(--high); border: 1px solid var(--high); }
+        .sev-medium { background: rgba(58, 227, 116, 0.2); color: var(--medium); border: 1px solid var(--medium); }
+        .sev-low { background: rgba(23, 192, 235, 0.2); color: var(--low); border: 1px solid var(--low); }
+
+        .finding-body {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .finding-meta {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .finding-meta span {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .code-container {
+            margin-top: 1rem;
+            background: #050608;
+            border-radius: 8px;
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+        }
+
+        .copy-btn {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        pre {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge badge-marketing">Auditoría de Crecimiento & SEO</div>
+            <h1>Optimización de Crecimiento y Conversión</h1>
+            <p>Auditoría de Contenido, SEO On-Page y Conversión (CTAs)</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val" id="seo-score">85%</div>
+                <div class="stat-label">SEO On-Page Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="social-val">Mejorable</div>
+                <div class="stat-label">Calidad Social OpenGraph</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="cta-val">Crítico</div>
+                <div class="stat-label">Estado de CTAs y Conversión</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Hallazgos de Marketing y SEO</h2>
+        
+        <div class="findings-list" id="findings-container">
+            <!-- Inserted programmatically by the Marketing Agent -->
+            <div class="finding-item">
+                <div class="finding-header" onclick="toggleBody(this)">
+                    <div class="finding-title-group">
+                        <span class="severity-badge sev-critical">Critical Risk</span>
+                        <span class="finding-title">Falta de Botón de Conversión Principal (CTA)</span>
+                    </div>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="finding-body">
+                    <div class="finding-meta">
+                        Ubicación: <span>index.html:45</span><br>
+                        Control Relacionado: <span>CTA & Conversión - Diseño por encima del pliegue</span>
+                    </div>
+                    <p>La página principal no cuenta con un botón de llamada a la acción primario y visible antes de hacer scroll (above the fold). Esto provoca un incremento en la tasa de rebote del usuario.</p>
+                    
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Sugerencia de Componente CTA Premium</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                        </div>
+                        <pre><code>&lt;!-- CTA Principal de Alta Conversión --&gt;
+&lt;div class="hero-cta"&gt;
+    &lt;a href="/empezar" class="btn btn-primary btn-glow"&gt;
+        Comenzar Ahora Gratis &lt;span&gt;&amp;rarr;&lt;/span&gt;
+    &lt;/a&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Generado automáticamente por el Agente de Crecimiento & SEO de OpenSkills &copy; 2026 - Conforme a mejores prácticas de marketing
+        </footer>
+    </div>
+
+    <script>
+        function toggleBody(headerElement) {
+            const item = headerElement.parentElement;
+            const body = item.querySelector('.finding-body');
+            headerElement.classList.toggle('active');
+            if (body.style.display === 'block') {
+                body.style.display = 'none';
+            } else {
+                body.style.display = 'block';
+            }
+        }
+
+        function copyCode(btn) {
+            const pre = btn.parentElement.nextElementSibling;
+            navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = '¡Copiado!';
+                btn.style.background = '#ff6b6b';
+                btn.style.color = '#fff';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'rgba(255, 107, 107, 0.1)';
+                    btn.style.color = 'var(--primary)';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -188,6 +188,7 @@ When loaded via finishing-a-development-branch, the security-auditor MUST run au
 3. NEVER mark complete if critical findings exist
 4. ALWAYS provide remediation steps per finding
 5. ALWAYS use the JSON report format
+6. ALWAYS output a direct, clickable `file:///` markdown link to the generated HTML report dashboard at the very end of your final message so the user can easily open it (e.g., `[Ver Reporte de Seguridad HTML](file:///C:/Users/...)`).
 
 ## 🧠 Bucle de Aprendizaje Dinámico (CODEX)
 

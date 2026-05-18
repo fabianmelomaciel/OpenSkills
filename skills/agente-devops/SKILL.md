@@ -54,6 +54,7 @@ You MUST check off every item before completing your audit:
 - [ ] Check `.gitignore` and `.dockerignore` for configuration safety.
 - [ ] Generate standard secure Docker/Compose scaffolding if missing.
 - [ ] Generate the premium HTML dashboard report under `reports/`.
+- [ ] **Mandatory Closing Rule:** Print the direct `file:///` clickable link to the generated HTML report dashboard at the very end of your final message so the user can easily click and open it (e.g., `[Ver Reporte DevOps HTML](file:///C:/Users/...)`).
 - [ ] Return the structured JSON final report.
 
 ---
