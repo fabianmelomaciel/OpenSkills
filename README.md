@@ -33,7 +33,8 @@ Funciona de manera autónoma con **opencode** y **antigravity**.
 | Agente | Descripción |
 |--------|-------------|
 | `project-manager` | Escucha al CEO, planea, delega a subagentes, revisa y reporta |
-| `creador-contenido-redes` | Analiza videos y optimiza contenido para redes sociales |
+| `optimizador-finops` | Realiza auditoría de calidad SQA de consumo de tokens y APIs de IA (conforme a ISO 31000) |
+| `agente-devops` | Diseña y audita empaquetado seguro en contenedores Docker y flujos de CI/CD (conforme a IEEE 730 e ISO 27001) |
 | `auditor-de-seguridad` | Escanea proyectos buscando vulnerabilidades, secrets, SAST, dependencias, infraestructura, DB y CI/CD |
 
 ---
@@ -107,7 +108,8 @@ Luego agrega las rutas a tu configuración:
     "paths": [
       "~/.config/opencode/openskills/skills/core",
       "~/.config/opencode/openskills/skills/project-manager",
-      "~/.config/opencode/openskills/skills/creador-contenido-redes",
+      "~/.config/opencode/openskills/skills/optimizador-finops",
+      "~/.config/opencode/openskills/skills/agente-devops",
       "~/.config/opencode/openskills/skills/auditor-de-seguridad"
     ]
   }
@@ -128,11 +130,13 @@ En opencode/antigravity, los skills se cargan automáticamente según la tarea. 
 
 ### Agentes primarios
 
-Los agentes `project-manager`, `creador-contenido-redes` y `auditor-de-seguridad` se configuran como agentes primarios. Puedes invocarlos directamente:
+Los agentes `project-manager`, `optimizador-finops`, `agente-devops` y `auditor-de-seguridad` se configuran como agentes primarios. Puedes invocarlos directamente:
 
 > "@project-manager necesito construir un login"
 
-> "@creador-contenido-redes optimiza este video"
+> "@optimizador-finops optimiza el consumo de este prompt"
+
+> "@agente-devops crea un Dockerfile seguro"
 
 > "@auditor-de-seguridad escanea este proyecto"
 
@@ -163,12 +167,17 @@ Generado dinámicamente usando la plantilla [dashboard-template.html](file:///c:
 * **Remediación Focalizada:** Tarjetas con colores de advertencia según la severidad para guiar al desarrollador en la solución.
 * **Visor de Código:** Bloques oscuros estilizados tipo terminal con tipografía monospace para examinar los fragmentos vulnerables.
 
-### 📱 2. Planificador Editorial de Contenido (`creador-contenido-redes`)
-Generado usando la plantilla [content-template.html](file:///c:/laragon/www/OpenSkills/skills/creador-contenido-redes/reports/content-template.html).
-* **Ganchos Virales:** Caja interactiva que despliega los ganchos recomendados para los primeros 3 segundos junto con sugerencias de gesticulación o tomas.
-* **Clips Sugeridos:** Listas ordenadas con marcas de tiempo óptimas para recortar fragmentos virales de alto impacto.
-* **Optimización Multiplataforma por Pestañas:** Un sistema interactivo que te permite alternar dinámicamente entre **TikTok**, **Instagram Reels** y **YouTube Shorts**, con temáticas visuales de color propias de cada red.
-* **Cajas de Copiado Rápido (Copy-to-Clipboard):** Botones inteligentes integrados que con un solo clic copian la descripción o hashtags al portapapeles y muestran feedback visual en color verde (`¡Copiado!`).
+### 💰 2. Dashboard de Optimización FinOps (`optimizador-finops`)
+Generado usando la plantilla [finops-template.html](file:///c:/laragon/www/OpenSkills/skills/optimizador-finops/reports/finops-template.html).
+* **Eficiencia de Costes (Amber/Gold Theme):** Métricas clave como el ahorro de tokens estimado, redundancia de prompts e índices de llamadas a APIs.
+* **Refactorización Propuesta:** Caja de código interactiva con botón de copiado rápido (`Copy-to-Clipboard`) para aplicar las optimizaciones de prompts y lógica.
+* **Gestión de Riesgos de Consumo (ISO 31000):** Tarjetas organizadas por severidad de fuga financiera (Critical, High, Medium, Low) con acordeones CSS.
+
+### 🚀 3. Dashboard de Seguridad de Despliegues (`agente-devops`)
+Generado usando la plantilla [devops-template.html](file:///c:/laragon/www/OpenSkills/skills/agente-devops/reports/devops-template.html).
+* **Mapeo de Calidad de Configuración (Electric Blue Theme):** Puntuación global SCM (SCM Quality Score), estado de privilegios root y pinning de dependencias.
+* **Auditoría de Entornos (IEEE 730 & ISO 27001):** Validaciones sobre imágenes base de Dockerfiles, docker-compose y GitHub Actions.
+* **Scaffolding Seguro:** Plantillas listas de Dockerfile y Compose libres de vulnerabilidades con botones de copiado rápido interactivos.
 
 ---
 
