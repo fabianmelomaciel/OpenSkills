@@ -50,6 +50,43 @@ function InstallToOpendir($source) {
     Write-Host "  $($skillDirs.Count) skills instaladas en opencode" -ForegroundColor Green
 }
 
+function Check-Dependencies {
+    Write-Host "`n=== DIAGNOSTICO DE DEPENDENCIAS ===" -ForegroundColor Cyan
+    $dependencies = @(
+        @{ Name = "git"; Command = "git --version"; Severity = "high"; Desc = "Control de versiones" }
+        @{ Name = "node"; Command = "node --version"; Severity = "medium"; Desc = "Multiplataforma y auditoria JS" }
+        @{ Name = "npm"; Command = "npm --version"; Severity = "medium"; Desc = "Gestor de paquetes JS" }
+        @{ Name = "composer"; Command = "composer --version"; Severity = "medium"; Desc = "Gestor de paquetes PHP" }
+        @{ Name = "python"; Command = "python --version"; Severity = "low"; Desc = "Auditoria Python" }
+        @{ Name = "pip-audit"; Command = "pip-audit --version"; Severity = "medium"; Desc = "Escaneo de seguridad Python" }
+    )
+    foreach ($dep in $dependencies) {
+        $status = "OK"
+        $color = "Green"
+        $check = Get-Command $dep.Name -ErrorAction SilentlyContinue
+        if (-not $check) {
+            $status = "FALTA (Recomendado)"
+            $color = "Yellow"
+            if ($dep.Severity -eq "high") {
+                $status = "FALTA (Critico)"
+                $color = "Red"
+            }
+            Write-Host "  [-] $($dep.Name) ($($dep.Desc)): $status" -ForegroundColor $color
+            
+            if ($dep.Name -eq "pip-audit" -and (Get-Command "pip" -ErrorAction SilentlyContinue)) {
+                $response = Read-Host "      ¿Deseas instalar 'pip-audit' automaticamente ahora via pip? [S/N]"
+                if ($response -eq 'S' -or $response -eq 's') {
+                    Write-Host "      Instalando pip-audit..." -ForegroundColor Cyan
+                    & pip install pip-audit
+                }
+            }
+        } else {
+            Write-Host "  [+] $($dep.Name) ($($dep.Desc)): Instalado" -ForegroundColor $color
+        }
+    }
+    Write-Host ""
+}
+
 if ($Help) {
     Write-Host @"
 OpenSkills Installer
@@ -70,6 +107,8 @@ if (-not (Test-Path -LiteralPath $skillsDir)) {
     Write-Host "ERROR: No se encuentra el directorio skills/ en $scriptDir" -ForegroundColor Red
     exit 1
 }
+
+Check-Dependencies
 
 if (-not $TargetDir) {
     $detected = @()
