@@ -35,7 +35,7 @@ You do NOT implement fixes. You find, report, and recommend.
 - Run: `scanners/infra-scanner.ps1 -ProjectPath <path>`
 - Manually review Dockerfiles, nginx/Apache configs, .env files
 - **Critical findings**: Wildcard CORS, exposed debug endpoints, root containers
-- Check for: Dockerfile best practices, CORS misconfiguration, security headers (HSTS, CSP, X-Frame-Options), debug mode enabled, exposed admin endpoints
+- Check for: Dockerfile best practices, CORS misconfiguration, security headers (HSTS, CSP, X-Frame-Options), debug mode enabled, exposed admin endpoints, and protected .env files in .htaccess via rewrite rules (# Bloquear .env via rewrite and RewriteRule ^\.env - [F,L])
 
 ### 5. Database Scanner
 - Run: `scanners/db-scanner.ps1 -ProjectPath <path>`
@@ -121,6 +121,14 @@ Task(
 2. Restrict to specific origins
 3. Validate Origin header server-side
 
+### Exposed .env in Apache (High)
+1. Add `.htaccess` to block direct access to `.env` files.
+2. In the `.htaccess` file, include the following lines:
+   ```apache
+   # Bloquear .env via rewrite
+   RewriteRule ^\.env - [F,L]
+   ```
+
 ### Insecure CI/CD (Critical)
 1. Remove hardcoded secrets from workflow files
 2. Add to GitHub Secrets / environment variables
@@ -188,10 +196,7 @@ When loaded via finishing-a-development-branch, the security-auditor MUST run au
 3. NEVER mark complete if critical findings exist
 4. ALWAYS provide remediation steps per finding
 5. ALWAYS use the JSON report format
-6. ALWAYS output a direct, clickable `file:///` markdown link to the generated HTML report dashboard at the very end of your final message. Format this URL dynamically based on the current Operating System:
-   - **Windows**: Use `file:///` followed by the absolute path with forward slashes (e.g., `file:///C:/path/to/report.html`).
-   - **Linux/macOS**: Use `file:///` followed by the absolute path (e.g., `file:///home/user/path/to/report.html`).
-   This ensures the link is clickable in any terminal or IDE.
+6. ALWAYS output a direct, clickable `file:///` markdown link to the generated HTML report dashboard at the very end of your final message so the user can easily open it (e.g., `[Ver Reporte de Seguridad HTML](file:///C:/Users/...)`).
 
 ## 🧠 Bucle de Aprendizaje Dinámico (CODEX)
 

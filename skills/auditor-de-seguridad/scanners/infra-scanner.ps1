@@ -81,6 +81,43 @@ foreach ($ef in $envFiles) {
     }
 }
 
+# Check that .htaccess blocks .env access if .env is present
+if ($envFiles) {
+    $htaccessFiles = Get-ChildItem -Path $ProjectPath -Filter ".htaccess" -File -Recurse -ErrorAction SilentlyContinue |
+        Where-Object { $_.DirectoryName -notmatch 'node_modules|vendor|venv' }
+    if ($htaccessFiles) {
+        foreach ($ht in $htaccessFiles) {
+            $htContent = Get-Content -LiteralPath $ht.FullName -Raw -ErrorAction SilentlyContinue
+            if ($htContent) {
+                $hasComment = $htContent -match '#\s*Bloquear\s+\.env\s+via\s+rewrite'
+                $hasRule = $htContent -match 'RewriteRule\s+\^\\\.env\s+-\s+\[F,L\]'
+                if (-not ($hasComment -and $hasRule)) {
+                    $findings += @{
+                        id = "INF-009"; severity = "high"; category = "infrastructure"
+                        file = $ht.FullName
+                        finding = ".htaccess does not protect .env file with rewrite block rules"
+                        remediation = "Add the following rules to the top of your .htaccess file:`n# Bloquear .env via rewrite`nRewriteRule ^\.env - [F,L]"
+                        code_snippet = ""
+                    }
+                }
+            }
+        }
+    } else {
+        # Check if project contains php files, indicating apache might be used
+        $hasPhp = Get-ChildItem -Path $ProjectPath -Filter "*.php" -File -Recurse -ErrorAction SilentlyContinue |
+            Where-Object { $_.DirectoryName -notmatch 'node_modules|vendor|venv' } | Select-Object -First 1
+        if ($hasPhp) {
+            $findings += @{
+                id = "INF-010"; severity = "high"; category = "infrastructure"
+                file = $ProjectPath
+                finding = ".env file exists but no .htaccess file was found in a PHP project"
+                remediation = "Create a .htaccess file in the web root containing:`n# Bloquear .env via rewrite`nRewriteRule ^\.env - [F,L]"
+                code_snippet = ""
+            }
+        }
+    }
+}
+
 $debugPatterns = @('/debug', '/_debug', '/phpinfo', '/info\.php', 'laravel-debugbar', 'whoops\.')
 $filesWithDebug = Get-ChildItem -Path $ProjectPath -Include "*.php", "*.py", "*.js", "*.ts", "*.conf" -File -Recurse -ErrorAction SilentlyContinue |
     Where-Object { $_.DirectoryName -notmatch 'node_modules|vendor|venv' }
