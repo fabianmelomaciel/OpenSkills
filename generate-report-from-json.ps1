@@ -123,6 +123,17 @@ foreach ($f in $reportData.findings) {
     $escapedFinding = Escape-Html $f.finding
     $escapedFile = Escape-Html $f.file
     
+    $fileHref = $f.file
+    if ($f.file -match '^(.*):(\d+)$') {
+        $fileHref = $Matches[1]
+    }
+    $fileUri = $fileHref.Replace("\", "/")
+    if (-not $fileUri.StartsWith("/")) {
+        $fileUri = "file:///" + $fileUri
+    } else {
+        $fileUri = "file://" + $fileUri
+    }
+    
     $description = $f.finding
     if ($f.description -and $f.description -ne $f.finding) {
         $description = $f.description
@@ -143,7 +154,7 @@ foreach ($f in $reportData.findings) {
                 </div>
                 <div class="finding-file-group">
                     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                    <span>$escapedFile</span>
+                    <a href="$fileUri" target="_blank" onclick="event.stopPropagation();">$escapedFile</a>
                 </div>
                 <div class="chevron">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -182,6 +193,11 @@ $template = [regex]::Replace($template, $placeholderPattern, $findingsHtml)
 # Escribir el reporte HTML
 $template | Out-File -FilePath $ReportPath -Encoding utf8 -Force
 Write-Host "Reporte visual premium generado en: $ReportPath" -ForegroundColor Green
+
+# Intentar abrir el reporte en el navegador automáticamente
+try {
+    Start-Process $ReportPath
+} catch {}
 
 $formattedPath = $ReportPath.Replace("\", "/")
 if ($formattedPath.StartsWith("/")) {
