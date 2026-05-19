@@ -62,6 +62,7 @@ After each task:
 - [ ] Follows existing conventions
 - [ ] No dead code, commented code, or console.logs
 - [ ] Handles edge cases (loading, error, empty)
+- [ ] **No Vibe Coding / AI Remnants**: verify that no comments like `// TODO: implement`, placeholders, or empty `catch`/`except` blocks exist in production code.
 - [ ] CEO would understand the result
 
 ## Reporting

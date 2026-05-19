@@ -55,6 +55,12 @@ $checks = @(
     @{ name = "Insecure Deserialization - JSON.parse (unsafe)"; severity = "medium"
        patterns = @('JSON\.parse\s*\(')
        extensions = @('.js', '.ts') }
+    @{ name = "AI Remnant - Vibe Coding Placeholder"; severity = "medium"
+       patterns = @('(//|#)\s*TODO:\s*implement', '(//|#)\s*Insert\s*logic\s*here', '(//|#)\s*Insert\s*code\s*here', '(//|#)\s*write\s*your\s*code\s*here', 'your-api-key-here', 'your_token_here', 'your-password-here', '\[\s*insert\s*code\s*here\s*\]', '<\s*placeholder\s*>')
+       extensions = @('.php', '.py', '.js', '.ts', '.java', '.go', '.rb', '.cs', '.tsx', '.jsx') }
+    @{ name = "AI Remnant - Lazy Error Handling"; severity = "low"
+       patterns = @('catch\s*\(\s*[^)]*\)\s*\{\s*\}', 'catch\s*\{\s*\}', 'except\b[^:]*:\s*pass')
+       extensions = @('.js', '.ts', '.tsx', '.jsx', '.cs', '.java', '.py', '.php') }
 )
 
 function MatchExtension($ext, $allowed) {
@@ -107,6 +113,8 @@ Get-ChildItem -Path $ProjectPath -File -Recurse -ErrorAction SilentlyContinue | 
                         "XSS*" { "Sanitize output, use DOMPurify or escape HTML entities" }
                         "Command Injection*" { "Avoid exec/shell/system calls with user input. Use parameterized APIs" }
                         "Path Traversal*" { "Validate and sanitize file paths, use allowlists" }
+                        "AI Remnant - Vibe Coding*" { "Replace placeholder with complete, functional implementation code" }
+                        "AI Remnant - Lazy Error*" { "Implement proper error handling, logging, or recovery logic" }
                         default { "Review code for security implications" }
                     }
                     code_snippet = $snippet

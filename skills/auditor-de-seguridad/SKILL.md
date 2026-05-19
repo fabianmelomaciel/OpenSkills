@@ -25,11 +25,11 @@ You do NOT implement fixes. You find, report, and recommend.
 - **Critical findings**: Known CVEs with active exploits
 - Check for: unpinned versions, deprecated packages, multiple lock files
 
-### 3. SAST Scanner (OWASP Top 10)
+### 3. SAST Scanner (OWASP Top 10 & AI Remnants)
 - Run: `scanners/sast-scanner.ps1 -ProjectPath <path>`
-- Manually review raw queries, template rendering, file operations
+- Manually review raw queries, template rendering, file operations, and look for AI remnants.
 - **Critical findings**: SQLi, Command Injection, Insecure Deserialization
-- Check for: SQL injection (string interpolation in queries), XSS (unsafe innerHTML, dangerouslySetInnerHTML, v-html), Command Injection (exec, shell_exec, system, eval), Path Traversal (include/require with user input), CSRF (missing tokens), Insecure Deserialization (pickle, unserialize)
+- Check for: SQL injection (string interpolation in queries), XSS (unsafe innerHTML, dangerouslySetInnerHTML, v-html), Command Injection (exec, shell_exec, system, eval), Path Traversal (include/require with user input), CSRF (missing tokens), Insecure Deserialization (pickle, unserialize), **AI Remnants & Vibe Coding Placeholders** (comments like `// TODO: implement`, `// Insert logic here`, or empty `catch`/`except` blocks).
 
 ### 4. Infrastructure Scanner
 - Run: `scanners/infra-scanner.ps1 -ProjectPath <path>`
