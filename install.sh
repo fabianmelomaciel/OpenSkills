@@ -98,6 +98,9 @@ TARGET=""
 if [ -d "$HOME/.config/opencode" ]; then
     TARGET="$HOME/.config/opencode/openskills"
     echo "Detectado: opencode -> $TARGET"
+elif [ -d "$HOME/.gemini/config" ]; then
+    TARGET="$HOME/.gemini/config/openskills"
+    echo "Detectado: antigravity (gemini) -> $TARGET"
 elif [ -d "$HOME/.config/antigravity" ]; then
     TARGET="$HOME/.config/antigravity/openskills"
     echo "Detectado: antigravity -> $TARGET"
@@ -132,26 +135,45 @@ if [ ! -f "$TARGET/CODEX.md" ]; then
     cat > "$TARGET/CODEX.md" << 'CODEX_EOF'
 # 🧠 OpenSkills: Tactical CODEX (Learning Memory)
 
-This file is the shared, evolving memory of the OpenSkills agent squad. It tracks
-environment-specific patterns, technical gotchas, and lessons learned to avoid
-repeating the same mistakes.
+This document is the shared, dynamically evolving persistent memory of the OpenSkills agent squad. It prevents re-explaining context, repeating solved problems, and wasting tokens on re-discovery.
 
 > [!IMPORTANT]
-> This file is **local-only** and listed in .gitignore. Never commit it to a
-> public repository — it may contain project-specific paths and patterns.
+> **AGENT DIRECTIVE:** Read this file at the START of every task. Apply all entries. Do NOT ask the user to re-explain anything documented here. Write back learnings after completing tasks.
 
-## 🧠 Environment & Core Intelligence
+> [!NOTE]
+> This file is **local-only** and listed in .gitignore. Your instance is yours — fill it with your project's truths.
 
-- **Host OS**: *(e.g. Ubuntu 22.04 / macOS Ventura / Windows PowerShell 5.1)*
-- **Active Workspace**: *(e.g. ~/projects/my-app — PHP SaaS)*
-- **Stack**: *(e.g. PHP 8.x, MySQL, nginx, cURL)*
+## 🎯 Project Context Quick Reference
+
+- **Project Name**: [e.g. Festday — PHP SaaS for event ticketing]
+- **Primary Language & Framework**: [e.g. PHP 8.2 / Custom MVC + Vue 3 frontend]
+- **Local Server**: [e.g. nginx 1.24 / Apache 2.4, port 80]
+- **Package Manager(s)**: [e.g. Composer 2.x + npm 10]
+- **Key Directories**: [e.g. /src = app, /public = web root]
+- **Database**: [e.g. MySQL 8 @ 127.0.0.1:3306]
+- **Deployment**: [e.g. VPS via git webhook]
+- **Design System**: [e.g. Custom CSS with --color-primary HSL]
+
+## 💡 Token Economy Rules
+
+1. Read CODEX first — never ask the user to re-explain documented context.
+2. Compact output — prefer tables and bullets over narrative prose.
+3. No preamble — skip openers, start doing.
+4. Reference don't repeat — cite past Mission Logs by date instead of re-explaining.
+5. Minimal clarifying questions — check files before asking.
+
+## 🏗️ Active Design System
+
+- **Primary Font**: [e.g. Inter via Google Fonts]
+- **Color Palette**: [e.g. HSL dark mode: bg hsl(224,14%,10%)]
+- **Border Radius Scale**: [e.g. 4/8/12/16px]
+- **Animation Standard**: [e.g. 150ms cubic-bezier(0.16,1,0.3,1)]
 
 ## 🛠️ Technical Gotchas & Environment Lessons
 
-- Deployment scripts (git.php, deploy.sh, etc.) must never be reachable from the
-  public web. Block in .htaccess or exclude from FTP sync. Classify as HIGH/CRITICAL
-  in audits if found exposed.
-- .env files must always be in .gitignore. Never commit secrets.
+- Deployment scripts must never be web-accessible. Block in .htaccess or nginx. Classify as CRITICAL in audits.
+- .env files must always be in .gitignore. In Apache: RewriteRule ^\.env - [F,L] in .htaccess.
+- OpenSkills path (Antigravity gemini): ~/.gemini/config/skills
 
 ## 💻 Mission Logs & Tactical Learnings
 

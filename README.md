@@ -28,6 +28,13 @@ Funciona de manera autónoma con **opencode** y **antigravity**.
 | `using-git-worktrees` | Aislar workspaces para features |
 | `writing-skills` | Crear y testear nuevas skills |
 
+### 🎨 Design Engineering (calidad visual premium)
+
+| Skill | Uso |
+|-------|-----|
+| `emil-kowalski-design` | Animaciones <300ms, micro-interacciones, perceived performance al estilo Emil Kowalski |
+| `impeccable-design-taste` | Auditoría de diseño premium: tipografía, color, espaciado, motion, accesibilidad WCAG AA |
+
 ### Agentes (asistentes especializados)
 
 | Agente | Descripción |
@@ -79,13 +86,20 @@ cd C:\laragon\www\OpenSkills
 .\install.ps1
 ```
 
-#### En Linux/Mac (antigravity)
+#### En Linux/Mac (antigravity / gemini)
 
 ```bash
 # 1. Clonar
-git clone https://github.com/fabianmelomaciel/OpenSkills.git ~/.config/antigravity/openskills
+git clone https://github.com/fabianmelomaciel/OpenSkills.git ~/.gemini/config/openskills
 
 # 2. Ejecutar instalador
+bash ~/.gemini/config/openskills/install.sh
+```
+
+O con el path clásico de antigravity:
+
+```bash
+git clone https://github.com/fabianmelomaciel/OpenSkills.git ~/.config/antigravity/openskills
 bash ~/.config/antigravity/openskills/install.sh
 ```
 
@@ -152,15 +166,24 @@ Los agentes `project-manager`, `optimizador-finops`, `agente-devops`, `auditor-d
 
 ## 🧠 Aprendizaje Dinámico (Sistema CODEX)
 
-OpenSkills incorpora un **Bucle de Memoria Persistente Compartida** a través del sistema **CODEX**. Esto permite que los agentes aprendan activamente de tu entorno de desarrollo local y eviten cometer los mismos errores o gotchas técnicos en el futuro.
+OpenSkills incorpora un **Bucle de Memoria Persistente Compartida** a través del sistema **CODEX**. Esto permite que los agentes aprendan activamente de tu entorno de desarrollo local y eviten cometer los mismos errores o repetir contexto ya conocido.
 
 ### ¿Cómo funciona el aprendizaje?
-1. **Lectura Activa:** Al iniciar una tarea, el agente busca y lee el archivo `CODEX.md` (buscando hacia arriba desde su carpeta o en el directorio raíz de ejecución).
-2. **Aplicación de Lecciones:** Adapta sus decisiones y comandos de acuerdo con las configuraciones y gotchas específicos de tu máquina documentados allí (como versiones de PHP, puertos de bases de datos, etc.).
-3. **Escritura en Caliente:** Si durante la tarea el agente descubre un patrón de error del entorno, soluciona un bug de configuración complejo o aprende una directiva del proyecto, **edita el archivo `CODEX.md` para registrar el aprendizaje** en la sección de Mission Logs.
+1. **Lectura Activa (CODEX-FIRST):** Al iniciar una tarea, el agente lee el archivo `CODEX.md` **antes de hacer cualquier pregunta**. Si el contexto del proyecto está documentado, no te lo vuelve a pedir.
+2. **Token Economy:** Los agentes siguen las reglas de economía de tokens del CODEX — output compacto, sin preámbulos, sin preguntas innecesarias.
+3. **Escritura en Caliente:** Si durante la tarea el agente descubre un patrón de error, soluciona un bug de configuración o aprende una directiva del proyecto, **edita el `CODEX.md` para registrar el aprendizaje** en Mission Logs.
+
+### Secciones del CODEX v2
+| Sección | Propósito |
+|---------|----------|
+| 🎯 Project Context Quick Reference | Stack, DB, directorios, deployment — no te lo vuelven a preguntar |
+| 💡 Token Economy Rules | Reglas de eficiencia que siguen todos los agentes |
+| 🏗️ Active Design System | Paleta, tipografía, radios — para consistencia visual |
+| 🛠️ Technical Gotchas | Quirks del entorno, reglas del proyecto |
+| 💻 Mission Logs | Historial de decisiones y soluciones |
 
 > [!NOTE]
-> **Preservación de Memoria:** Los instaladores (`install.ps1` y `install.sh`) están configurados para instalar `CODEX.md` **únicamente si no existe**. Si ya hay un archivo `CODEX.md` en tu directorio local activo, el instalador lo conservará intacto. ¡Tu memoria de aprendizaje agéntica acumulada está 100% protegida!
+> **Preservación de Memoria:** Los instaladores (`install.ps1` y `install.sh`) instalan `CODEX.md` **únicamente si no existe**. Si ya hay un `CODEX.md` en tu directorio local activo, el instalador lo conservará intacto. ¡Tu memoria de aprendizaje acumulada está 100% protegida!
 
 ---
 
