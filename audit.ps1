@@ -135,11 +135,15 @@ if (Test-Path -LiteralPath $templateFile) {
         if ($f.file -match '^(.*):(\d+)$') {
             $fileHref = $Matches[1]
         }
-        $fileUri = $fileHref.Replace("\", "/")
-        if (-not $fileUri.StartsWith("/")) {
-            $fileUri = "file:///" + $fileUri
-        } else {
+        $absoluteFileHref = $fileHref
+        if (-not [string]::IsNullOrEmpty($fileHref) -and -not [System.IO.Path]::IsPathRooted($fileHref)) {
+            $absoluteFileHref = Join-Path -Path $ProjectPath -ChildPath $fileHref
+        }
+        $fileUri = $absoluteFileHref.Replace("\", "/")
+        if ($fileUri.StartsWith("/")) {
             $fileUri = "file://" + $fileUri
+        } else {
+            $fileUri = "file:///" + $fileUri
         }
         
         $findingsHtml += @"

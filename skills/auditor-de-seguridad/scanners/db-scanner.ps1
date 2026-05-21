@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory=$true)]
     [string]$ProjectPath
 )
@@ -51,7 +51,7 @@ Where-Object {
         }
     }
 
-    if ($content -match '3306' -or $content -match '5432' -or $content -match '27017' -or $content -match '6379') {
+    if ($content -match '\b3306\b' -or $content -match '\b5432\b' -or $content -match '\b27017\b' -or $content -match '\b6379\b') {
         $findings += @{
             id = "DB-004"; severity = "low"; category = "database"
             file = $_.FullName
@@ -68,7 +68,7 @@ if ($sqlFiles.Count -gt 10) {
     $findings += @{
         id = "DB-005"; severity = "low"; category = "database"
         file = "$(($sqlFiles | Select-Object -First 1).DirectoryName)"
-        finding = "Large number of SQL files ($($sqlFiles.Count)) — review for unsafe operations"
+        finding = "Large number of SQL files ($($sqlFiles.Count)) - review for unsafe operations"
         remediation = "Use structured migrations with rollback support"
         code_snippet = ""
     }

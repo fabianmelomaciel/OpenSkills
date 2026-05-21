@@ -89,9 +89,9 @@ if ($envFiles) {
         foreach ($ht in $htaccessFiles) {
             $htContent = Get-Content -LiteralPath $ht.FullName -Raw -ErrorAction SilentlyContinue
             if ($htContent) {
-                $hasComment = $htContent -match '#\s*Bloquear\s+\.env\s+via\s+rewrite'
-                $hasRule = $htContent -match 'RewriteRule\s+\^\\\.env\s+-\s+\[F,L\]'
-                if (-not ($hasComment -and $hasRule)) {
+                $hasRewriteRule = $htContent -match 'RewriteRule\s+.*\^\\?\.env'
+                $hasFilesBlock = $htContent -match '<Files\s+[^>]*\.env' -or $htContent -match '<FilesMatch\s+[^>]*\.env'
+                if (-not ($hasRewriteRule -or $hasFilesBlock)) {
                     $findings += @{
                         id = "INF-009"; severity = "high"; category = "infrastructure"
                         file = $ht.FullName
@@ -118,7 +118,7 @@ if ($envFiles) {
     }
 }
 
-$debugPatterns = @('/debug', '/_debug', '/phpinfo', '/info\.php', 'laravel-debugbar', 'whoops\.')
+$debugPatterns = @('/[_]?debug\b', '\bphpinfo\s*\(', '\binfo\.php\b', '\blaravel-debugbar\b', '\bwhoops\b')
 $filesWithDebug = Get-ChildItem -Path $ProjectPath -Include "*.php", "*.py", "*.js", "*.ts", "*.conf" -File -Recurse -ErrorAction SilentlyContinue |
     Where-Object { $_.DirectoryName -notmatch 'node_modules|vendor|venv' }
 foreach ($fd in $filesWithDebug) {

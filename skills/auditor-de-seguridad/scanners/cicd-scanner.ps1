@@ -6,10 +6,10 @@ param(
 $findings = @()
 
 $ghaFiles = Get-ChildItem -Path $ProjectPath -Filter "*.yml" -Recurse -ErrorAction SilentlyContinue |
-    Where-Object { $_.DirectoryName -match '\\.github\\workflows' -and $_.DirectoryName -notmatch 'node_modules|vendor' }
+    Where-Object { $_.DirectoryName -match '\.github[\\/]workflows' -and $_.DirectoryName -notmatch 'node_modules|vendor' }
 if ($ghaFiles.Count -eq 0) {
     $ghaFiles = Get-ChildItem -Path $ProjectPath -Filter "*.yaml" -Recurse -ErrorAction SilentlyContinue |
-        Where-Object { $_.DirectoryName -match '\\.github\\workflows' -and $_.DirectoryName -notmatch 'node_modules|vendor' }
+        Where-Object { $_.DirectoryName -match '\.github[\\/]workflows' -and $_.DirectoryName -notmatch 'node_modules|vendor' }
 }
 
 if ($ghaFiles.Count -gt 0) {

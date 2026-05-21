@@ -39,6 +39,7 @@ if (-not (Test-Path -LiteralPath $JsonPath)) {
     exit 1
 }
 $JsonPath = (Get-Item $JsonPath).FullName
+$BaseDir = Split-Path -Parent $JsonPath
 
 if (-not $TemplatePath) {
     $TemplatePath = Join-Path -Path $scriptDir -ChildPath "skills\auditor-de-seguridad\reports\dashboard-template.html"
@@ -127,11 +128,15 @@ foreach ($f in $reportData.findings) {
     if ($f.file -match '^(.*):(\d+)$') {
         $fileHref = $Matches[1]
     }
-    $fileUri = $fileHref.Replace("\", "/")
-    if (-not $fileUri.StartsWith("/")) {
-        $fileUri = "file:///" + $fileUri
-    } else {
+    $absoluteFileHref = $fileHref
+    if (-not [string]::IsNullOrEmpty($fileHref) -and -not [System.IO.Path]::IsPathRooted($fileHref)) {
+        $absoluteFileHref = Join-Path -Path $BaseDir -ChildPath $fileHref
+    }
+    $fileUri = $absoluteFileHref.Replace("\", "/")
+    if ($fileUri.StartsWith("/")) {
         $fileUri = "file://" + $fileUri
+    } else {
+        $fileUri = "file:///" + $fileUri
     }
     
     $description = $f.finding

@@ -71,7 +71,7 @@ Get-ChildItem -Path $ProjectPath -File -Recurse -ErrorAction SilentlyContinue | 
     }
 }
 
-$envFiles = Get-ChildItem -Path $ProjectPath -Filter ".env*" -File -ErrorAction SilentlyContinue | Where-Object { -not (ShouldExcludeDir $_.DirectoryName) }
+$envFiles = Get-ChildItem -Path $ProjectPath -Filter ".env*" -File -ErrorAction SilentlyContinue | Where-Object { -not (ShouldExcludeDir $_.DirectoryName) -and $_.Name -ne ".env.example" -and $_.Name -ne ".env.template" }
 foreach ($f in $envFiles) {
     $findings.Add(@{
         id = "SEC-$(($findings.Count + 1).ToString('D3'))"

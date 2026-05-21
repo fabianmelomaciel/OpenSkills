@@ -29,7 +29,7 @@ $checks = @(
        patterns = @('document\.write\s*\(')
        extensions = @('.js', '.ts', '.html') }
     @{ name = "Command Injection - exec/shell"; severity = "critical"
-       patterns = @('exec\s*\(', 'shell_exec\s*\(', 'system\s*\(', 'popen\s*\(', 'child_process\.exec\s*\(')
+       patterns = @('(?<![\.\?])\bexec\s*\(', 'shell_exec\s*\(', 'system\s*\(', 'popen\s*\(', 'child_process\.exec\s*\(')
        extensions = @('.php', '.py', '.js', '.ts') }
     @{ name = "Command Injection - eval"; severity = "critical"
        patterns = @('\beval\s*\(', 'assert\s*\(')
@@ -52,9 +52,6 @@ $checks = @(
     @{ name = "Insecure Deserialization - unserialize"; severity = "critical"
        patterns = @('unserialize\s*\(')
        extensions = @('.php') }
-    @{ name = "Insecure Deserialization - JSON.parse (unsafe)"; severity = "medium"
-       patterns = @('JSON\.parse\s*\(')
-       extensions = @('.js', '.ts') }
     @{ name = "AI Remnant - Vibe Coding Placeholder"; severity = "medium"
        patterns = @('(//|#)\s*TODO:\s*implement', '(//|#)\s*Insert\s*logic\s*here', '(//|#)\s*Insert\s*code\s*here', '(//|#)\s*write\s*your\s*code\s*here', 'your-api-key-here', 'your_token_here', 'your-password-here', '\[\s*insert\s*code\s*here\s*\]', '<\s*placeholder\s*>')
        extensions = @('.php', '.py', '.js', '.ts', '.java', '.go', '.rb', '.cs', '.tsx', '.jsx') }

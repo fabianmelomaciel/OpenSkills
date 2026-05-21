@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(Mandatory=$true)]
     [string]$ProjectPath
 )
@@ -8,14 +8,17 @@ $hasAnyManager = $false
 $packageJson = Get-ChildItem -Path $ProjectPath -Filter "package.json" -File -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.DirectoryName -notmatch 'node_modules' }
 if ($packageJson) {
     $hasAnyManager = $true
-    $packageLock = Get-ChildItem -Path $ProjectPath -Filter "package-lock.json" -File -ErrorAction SilentlyContinue | Select-Object -First 1
-    if (-not $packageLock) {
-        $findings += @{
-            id = "DEP-001"; severity = "medium"; category = "dependencies"
-            file = "$(($packageJson | Select-Object -First 1).FullName)"
-            finding = "No package-lock.json found"
-            remediation = "Run npm install to generate package-lock.json for reproducible builds"
-            code_snippet = ""
+    foreach ($pj in $packageJson) {
+        $dir = $pj.DirectoryName
+        $packageLock = Get-ChildItem -Path $dir -Filter "package-lock.json" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $packageLock) {
+            $findings += @{
+                id = "DEP-001"; severity = "medium"; category = "dependencies"
+                file = $pj.FullName
+                finding = "No package-lock.json found"
+                remediation = "Run npm install to generate package-lock.json for reproducible builds"
+                code_snippet = ""
+            }
         }
     }
     $auditResult = & npm audit --json 2>&1 | Out-String
@@ -80,13 +83,20 @@ if ($reqFiles) {
 }
 foreach ($req in $reqFiles) {
     $lines = Get-Content -LiteralPath $req.FullName -ErrorAction SilentlyContinue
-    $pinned = ($lines | Where-Object { $_ -match '==' }).Count
-    if ($pinned -gt 0) {
+    $unpinned = 0
+    foreach ($line in $lines) {
+        $trimmed = $line.Trim()
+        if (-not $trimmed -or $trimmed.StartsWith("#") -or $trimmed.StartsWith("-")) { continue }
+        if ($trimmed -notmatch '[=<>~@]') {
+            $unpinned++
+        }
+    }
+    if ($unpinned -gt 0) {
         $findings += @{
             id = "DEP-006"; severity = "low"; category = "dependencies"
             file = $req.FullName
-            finding = "$pinned packages pinned to exact versions in $($req.Name)"
-            remediation = "Consider using >= to allow patch updates"
+            finding = "$unpinned packages not pinned to exact versions in $($req.Name)"
+            remediation = "Pin dependencies to exact versions (e.g. package==1.2.3) or use a lockfile to prevent supply chain attacks and ensure reproducible builds"
             code_snippet = ""
         }
     }
