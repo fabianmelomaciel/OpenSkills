@@ -21,6 +21,19 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 
 If you haven't run the verification command in this message, you cannot claim it passes.
 
+### Micro-Verification Rule
+NEVER assume a code edit works. Immediately run syntax, lint, compiler, or unit test checks right after making the change and before moving on or asking the user.
+
+## Micro-Verification (Verify-As-You-Go Loop)
+
+Waiting until the end of a multi-file task to verify is a recipe for disaster and massive token waste. You must run micro-verification commands immediately after every edit:
+
+1. **Syntax / Compilation Check**: After editing any file, immediately check for syntax errors or compile errors (e.g., `php -l <file>`, `node -c <file>`, `python -m py_compile <file>`, `tsc --noEmit`, `go build`, `cargo check`).
+2. **Fast Test Feedback**: If the file has associated tests, run the specific test file immediately.
+3. **Prevent Cascades**: Fix any error or regression before writing more code.
+
+This micro-feedback loop prevents compiling a stack of errors that are hard to isolate and require massive token usage to debug later.
+
 ## The Gate Function
 
 ```
@@ -48,6 +61,7 @@ Skip any step = lying, not verifying
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
+| Changes are correct | Immediate micro-verification (syntax check / tests) on modified files | Waiting until all files are edited to check code correctness |
 
 ## Red Flags - STOP
 
@@ -58,6 +72,7 @@ Skip any step = lying, not verifying
 - Relying on partial verification
 - Thinking "just this once"
 - Tired and wanting work over
+- Editing multiple files without running a single syntax check or test in between
 - **ANY wording implying success without having run verification**
 
 ## Rationalization Prevention
@@ -71,6 +86,7 @@ Skip any step = lying, not verifying
 | "Agent said success" | Verify independently |
 | "I'm tired" | Exhaustion ≠ excuse |
 | "Partial check is enough" | Partial proves nothing |
+| "I will test it all at the end" | Cascading errors are hard to debug and waste tokens. Verify as you go. |
 | "Different words so rule doesn't apply" | Spirit over letter |
 
 ## Key Patterns

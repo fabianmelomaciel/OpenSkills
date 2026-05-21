@@ -183,6 +183,7 @@ You MUST complete each phase before proceeding to the next.
    - ONE change at a time
    - No "while I'm here" improvements
    - No bundled refactoring
+   - **Micro-Verification Loop**: Run syntax/compilation checks or unit tests immediately after editing any single file, before modifying another file or calling other tools.
 
 3. **Verify Fix**
    - Test passes now?
@@ -211,6 +212,10 @@ You MUST complete each phase before proceeding to the next.
    **Discuss with your human partner before attempting more fixes**
 
    This is NOT a failed hypothesis - this is a wrong architecture.
+
+6. **Write Learnings to CODEX.md**
+   - If the bug was non-obvious, environment-related, configuration-dependent, or took significant time, immediately write it down in the project's local `CODEX.md` (under `## 🛠️ Technical Gotchas` or `## 💻 Mission Logs`).
+   - This ensures that future tasks and other subagents don't waste tokens re-debugging the same issues.
 
 ## Red Flags - STOP and Follow Process
 

@@ -172,6 +172,8 @@ OpenSkills incorpora un **Bucle de Memoria Persistente Compartida** a través de
 1. **Lectura Activa (CODEX-FIRST):** Al iniciar una tarea, el agente lee el archivo `CODEX.md` **antes de hacer cualquier pregunta**. Si el contexto del proyecto está documentado, no te lo vuelve a pedir.
 2. **Token Economy:** Los agentes siguen las reglas de economía de tokens del CODEX — output compacto, sin preámbulos, sin preguntas innecesarias.
 3. **Escritura en Caliente:** Si durante la tarea el agente descubre un patrón de error, soluciona un bug de configuración o aprende una directiva del proyecto, **edita el `CODEX.md` para registrar el aprendizaje** en Mission Logs.
+4. **Verificación Inmediata (Micro-Verification):** Tras cada modificación de código, el agente verifica la sintaxis, la compilación o ejecuta tests locales inmediatamente antes de continuar, previniendo cascadas de fallos costosas en tokens.
+5. **Aprendizaje de Contexto Dinámico:** Al resolverse cualquier bug o quirk del entorno, este se documenta en caliente en el CODEX para que otros subagentes o futuras tareas no consuman tokens en diagnosticar de nuevo el mismo problema.
 
 ### Secciones del CODEX v2
 | Sección | Propósito |

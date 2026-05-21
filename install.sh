@@ -161,6 +161,8 @@ This document is the shared, dynamically evolving persistent memory of the OpenS
 3. No preamble — skip openers, start doing.
 4. Reference don't repeat — cite past Mission Logs by date instead of re-explaining.
 5. Minimal clarifying questions — check files before asking.
+6. Immediate Code Verification (Verify-As-You-Go) — Never assume a code edit works. Immediately run syntax, compile, linter, or test commands after every single modification.
+7. Dynamic Context Learning — Write new findings (gotchas, environment/config quirks) to CODEX.md under Technical Gotchas or Mission Logs immediately after resolving them.
 
 ## 🏗️ Active Design System
 
