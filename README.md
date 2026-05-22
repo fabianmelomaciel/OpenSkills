@@ -164,6 +164,15 @@ Los agentes `project-manager`, `optimizador-finops`, `agente-devops`, `auditor-d
 
 ---
 
+## 🧩 Filosofía de Código: Componentes Pequeños y "Humanizados"
+
+OpenSkills adopta una filosofía de desarrollo estricta orientada a la eficiencia y el camuflaje:
+1. **Micro-Componentes para Ahorro de Tokens:** Todo el código se diseña y construye en archivos/componentes pequeños y modulares. Esto evita lecturas gigantes de archivos largos, ahorrando masivamente el consumo de tokens de contexto cuando interactúas con los agentes.
+2. **Refactorización Activa:** Si un agente detecta un archivo voluminoso, intentará sugerir o realizar una refactorización para compactarlo y dividirlo.
+3. **Código "Humanizado":** Los agentes están instruidos para generar comentarios naturales (sin jerga robótica) y aplicar espaciados aleatorios e irregulares (estilo humano). Al inspeccionar el código, no presentará el típico formato rígido y predecible que delata que fue hecho con IA.
+
+---
+
 ## 🧠 Aprendizaje Dinámico (Sistema CODEX)
 
 OpenSkills incorpora un **Bucle de Memoria Persistente Compartida** a través del sistema **CODEX**. Esto permite que los agentes aprendan activamente de tu entorno de desarrollo local y eviten cometer los mismos errores o repetir contexto ya conocido.
