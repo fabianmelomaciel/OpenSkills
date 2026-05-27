@@ -139,9 +139,24 @@ Luego agrega las rutas a tu configuración:
 ```
 
 
+
 ## Compatibilidad con otras herramientas de IA
 
 Dado que las skills de **OpenSkills** están escritas en Markdown estándar con metadatos YAML, son 100% compatibles e integrables de manera nativa o personalizada con otras herramientas líderes de IA:
+
+### ⚙️ Automatización con el Instalador (¡Recomendado!)
+Puedes generar automáticamente la matriz de compatibilidad para tus proyectos (Cursor y GitHub Copilot) utilizando los scripts de instalación indicando la carpeta de tu proyecto. El script creará los directorios correspondientes (`.cursor/rules/` y `.github/instructions/`) y exportará todas las skills (incluidas las nested core skills) formateando y adaptando las cabeceras YAML de forma automática:
+
+* **En Windows (PowerShell):**
+  ```powershell
+  .\install.ps1 -ProjectDir "C:\ruta\a\tu-proyecto"
+  ```
+* **En Linux/Mac (Bash):**
+  ```bash
+  ./install.sh --project "/ruta/a/tu-proyecto"
+  ```
+
+---
 
 ### 1. Claude Code (CLI de Anthropic)
 Claude Code soporta la carga global o local de carpetas de skills con formato `SKILL.md` y frontmatter YAML:

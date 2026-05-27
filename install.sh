@@ -7,6 +7,83 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILLS_DIR="$SCRIPT_DIR/skills"
 
+TARGET_DIR=""
+PROJECT_DIR=""
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -t|--target) TARGET_DIR="$2"; shift ;;
+        -p|--project) PROJECT_DIR="$2"; shift ;;
+        -h|--help)
+            echo "OpenSkills Installer"
+            echo "===================="
+            echo "Instala skills de OpenSkills en opencode o antigravity."
+            echo ""
+            echo "USO:"
+            echo "  ./install.sh                              - Detecta e instala automaticamente"
+            echo "  ./install.sh --target \"/ruta\"            - Instala en ruta personalizada"
+            echo "  ./install.sh --project \"/proyecto\"       - Genera reglas compatibles en tu proyecto (Cursor/Copilot)"
+            echo "  ./install.sh --help                       - Muestra esta ayuda"
+            exit 0
+            ;;
+        *) echo "Parametro desconocido: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+install_to_project() {
+    local SOURCE="$1"
+    local PROJECT="$2"
+    echo -e "\nInstalando compatibilidad para proyectos (Cursor y GitHub Copilot) en: $PROJECT"
+    
+    if command -v node &> /dev/null; then
+        node -e '
+const fs = require("fs");
+const path = require("path");
+const scriptDir = process.argv[1];
+const projectDir = process.argv[2];
+const skillsDir = path.join(scriptDir, "skills");
+const cursorRulesDir = path.join(projectDir, ".cursor", "rules");
+const copilotDir = path.join(projectDir, ".github", "instructions");
+fs.mkdirSync(cursorRulesDir, { recursive: true });
+fs.mkdirSync(copilotDir, { recursive: true });
+
+const scanSkills = (dir) => {
+  fs.readdirSync(dir, { withFileTypes: true }).forEach(d => {
+    const fullPath = path.join(dir, d.name);
+    if (d.isDirectory()) {
+      const file = path.join(fullPath, "SKILL.md");
+      if (fs.existsSync(file)) {
+        const content = fs.readFileSync(file, "utf8");
+        let cursor = content;
+        if (content.includes("description:") && !content.includes("globs:")) {
+          cursor = content.replace(/(description:[^\r\n]*)/, "$1\nglobs: [\"*\"]\nalwaysApply: false");
+        }
+        fs.writeFileSync(path.join(cursorRulesDir, d.name + ".mdc"), cursor, "utf8");
+        console.log("  Cursor Rule: " + d.name + ".mdc");
+        let copilot = content;
+        if (content.includes("---")) {
+          const parts = content.split("---");
+          if (parts.length >= 3) {
+            parts[1] = "\napplyTo:\n  - *\n";
+            copilot = parts.join("---");
+          }
+        }
+        fs.writeFileSync(path.join(copilotDir, d.name + ".instructions.md"), copilot, "utf8");
+        console.log("  Copilot Instruction: " + d.name + ".instructions.md");
+      } else {
+        scanSkills(fullPath);
+      }
+    }
+  });
+};
+scanSkills(skillsDir);
+' "$SOURCE" "$PROJECT"
+    else
+        echo "  [-] Error: Node.js es requerido para dar formato a las reglas de Cursor/Copilot."
+    fi
+}
+
 install_powershell() {
     echo "Detectando sistema operativo..."
     if [ "$(uname)" == "Darwin" ]; then
@@ -95,23 +172,28 @@ check_dependencies
 
 # Detectar destinos
 DETECTED=()
-if [ -d "$HOME/.config/opencode" ]; then
-    DETECTED+=("$HOME/.config/opencode/openskills")
-    echo "Detectado: opencode -> $HOME/.config/opencode/openskills"
-fi
-if [ -d "$HOME/.gemini/config" ]; then
-    DETECTED+=("$HOME/.gemini/config/openskills")
-    echo "Detectado: antigravity (gemini) -> $HOME/.gemini/config/openskills"
-fi
-if [ -d "$HOME/.config/antigravity" ]; then
-    DETECTED+=("$HOME/.config/antigravity/openskills")
-    echo "Detectado: antigravity -> $HOME/.config/antigravity/openskills"
-fi
+if [ -n "$TARGET_DIR" ]; then
+    DETECTED+=("$TARGET_DIR")
+    echo "Usando destino manual: $TARGET_DIR"
+else
+    if [ -d "$HOME/.config/opencode" ]; then
+        DETECTED+=("$HOME/.config/opencode/openskills")
+        echo "Detectado: opencode -> $HOME/.config/opencode/openskills"
+    fi
+    if [ -d "$HOME/.gemini/config" ]; then
+        DETECTED+=("$HOME/.gemini/config/openskills")
+        echo "Detectado: antigravity (gemini) -> $HOME/.gemini/config/openskills"
+    fi
+    if [ -d "$HOME/.config/antigravity" ]; then
+        DETECTED+=("$HOME/.config/antigravity/openskills")
+        echo "Detectado: antigravity -> $HOME/.config/antigravity/openskills"
+    fi
 
-if [ ${#DETECTED[@]} -eq 0 ]; then
-    TARGET="$HOME/.openskills"
-    echo "No se detecto opencode ni antigravity. Usando: $TARGET"
-    DETECTED+=("$TARGET")
+    if [ ${#DETECTED[@]} -eq 0 ]; then
+        TARGET="$HOME/.openskills"
+        echo "No se detecto opencode ni antigravity. Usando: $TARGET"
+        DETECTED+=("$TARGET")
+    fi
 fi
 
 COUNT=0
@@ -224,4 +306,8 @@ if [ -f "$OPENCODE_CONFIG" ] && command -v jq &> /dev/null; then
     echo "Configurando opencode.json..."
     # Nota: la config manual se explica en el README
     echo "  Puedes usar: jq para actualizar skills.paths manualmente"
+fi
+
+if [ -n "$PROJECT_DIR" ]; then
+    install_to_project "$SCRIPT_DIR" "$PROJECT_DIR"
 fi

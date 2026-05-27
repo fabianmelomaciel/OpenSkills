@@ -1,10 +1,63 @@
 param(
     [string]$TargetDir = "",
+    [string]$ProjectDir = "",
     [switch]$Help
 )
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $skillsDir = Join-Path -Path $scriptDir -ChildPath "skills"
+
+function InstallToProject($project, $source) {
+    if (-not $source) { $source = $scriptDir }
+    Write-Host "`nInstalando compatibilidad para proyectos (Cursor y GitHub Copilot) en: $project" -ForegroundColor Cyan
+    $nodeCode = @'
+const fs = require('fs');
+const path = require('path');
+const scriptDir = process.argv[1];
+const projectDir = process.argv[2];
+const skillsDir = path.join(scriptDir, 'skills');
+const cursorRulesDir = path.join(projectDir, '.cursor', 'rules');
+const copilotDir = path.join(projectDir, '.github', 'instructions');
+fs.mkdirSync(cursorRulesDir, { recursive: true });
+fs.mkdirSync(copilotDir, { recursive: true });
+
+const scanSkills = (dir) => {
+  fs.readdirSync(dir, { withFileTypes: true }).forEach(d => {
+    const fullPath = path.join(dir, d.name);
+    if (d.isDirectory()) {
+      const file = path.join(fullPath, 'SKILL.md');
+      if (fs.existsSync(file)) {
+        const content = fs.readFileSync(file, 'utf8');
+        let cursor = content;
+        if (content.includes('description:') && !content.includes('globs:')) {
+          cursor = content.replace(/(description:[^\r\n]*)/, '$1\nglobs: ["*"]\nalwaysApply: false');
+        }
+        fs.writeFileSync(path.join(cursorRulesDir, d.name + '.mdc'), cursor, 'utf8');
+        console.log('  Cursor Rule: ' + d.name + '.mdc');
+        let copilot = content;
+        if (content.includes('---')) {
+          const parts = content.split('---');
+          if (parts.length >= 3) {
+            parts[1] = '\napplyTo:\n  - *\n';
+            copilot = parts.join('---');
+          }
+        }
+        fs.writeFileSync(path.join(copilotDir, d.name + '.instructions.md'), copilot, 'utf8');
+        console.log('  Copilot Instruction: ' + d.name + '.instructions.md');
+      } else {
+        scanSkills(fullPath);
+      }
+    }
+  });
+};
+scanSkills(skillsDir);
+'@
+    if (Get-Command node -ErrorAction SilentlyContinue) {
+        node -e $nodeCode $source $project
+    } else {
+        Write-Host "  [-] Error: Node.js es requerido para dar formato a las reglas de Cursor/Copilot." -ForegroundColor Red
+    }
+}
 
 function InstallToDir($target, $source) {
     if (-not $source) { $source = $scriptDir }
@@ -149,6 +202,7 @@ Instala skills de OpenSkills en opencode o antigravity.
 USO:
   .\install.ps1                              - Detecta e instala automaticamente
   .\install.ps1 -TargetDir "C:\ruta"          - Instala en ruta personalizada
+  .\install.ps1 -ProjectDir "C:\proyecto"     - Genera reglas compatibles en tu proyecto (Cursor/Copilot)
   .\install.ps1 -Help                         - Muestra esta ayuda
 
 SIN PARAMETROS: Detecta opencode o antigravity y instala alli.
@@ -192,9 +246,16 @@ if (-not $TargetDir) {
         Write-Host "Detectados opencode y antigravity. Instalando en ambos..." -ForegroundColor Green
         foreach ($d in $detected) { InstallToDir $d.Path $scriptDir }
         InstallToOpendir $scriptDir
+        if ($ProjectDir) {
+            InstallToProject $ProjectDir $scriptDir
+        }
         Write-Host "`nInstalacion completa en ambos!" -ForegroundColor Green
         return
     }
 }
 
 InstallToDir $TargetDir $scriptDir
+
+if ($ProjectDir) {
+    InstallToProject $ProjectDir $scriptDir
+}
