@@ -93,46 +93,53 @@ fi
 
 check_dependencies
 
-# Detectar destino
-TARGET=""
+# Detectar destinos
+DETECTED=()
 if [ -d "$HOME/.config/opencode" ]; then
-    TARGET="$HOME/.config/opencode/openskills"
-    echo "Detectado: opencode -> $TARGET"
-elif [ -d "$HOME/.gemini/config" ]; then
-    TARGET="$HOME/.gemini/config/openskills"
-    echo "Detectado: antigravity (gemini) -> $TARGET"
-elif [ -d "$HOME/.config/antigravity" ]; then
-    TARGET="$HOME/.config/antigravity/openskills"
-    echo "Detectado: antigravity -> $TARGET"
-else
-    TARGET="$HOME/.openskills"
-    echo "No se detecto opencode ni antigravity. Usando: $TARGET"
+    DETECTED+=("$HOME/.config/opencode/openskills")
+    echo "Detectado: opencode -> $HOME/.config/opencode/openskills"
+fi
+if [ -d "$HOME/.gemini/config" ]; then
+    DETECTED+=("$HOME/.gemini/config/openskills")
+    echo "Detectado: antigravity (gemini) -> $HOME/.gemini/config/openskills"
+fi
+if [ -d "$HOME/.config/antigravity" ]; then
+    DETECTED+=("$HOME/.config/antigravity/openskills")
+    echo "Detectado: antigravity -> $HOME/.config/antigravity/openskills"
 fi
 
-# Crear estructura
-mkdir -p "$TARGET/skills"
-mkdir -p "$TARGET/docs"
+if [ ${#DETECTED[@]} -eq 0 ]; then
+    TARGET="$HOME/.openskills"
+    echo "No se detecto opencode ni antigravity. Usando: $TARGET"
+    DETECTED+=("$TARGET")
+fi
 
-# Copiar skills
-echo ""
-echo "Instalando skills..."
 COUNT=0
-for SKILL in "$SKILLS_DIR"/*/; do
-    NAME=$(basename "$SKILL")
-    echo "  Copiando: $NAME..."
-    cp -rf "$SKILL" "$TARGET/skills/$NAME"
-    COUNT=$((COUNT + 1))
-done
+for TARGET in "${DETECTED[@]}"; do
+    echo -e "\nInstalando en: $TARGET"
+    mkdir -p "$TARGET/skills"
+    mkdir -p "$TARGET/docs"
 
-# Copiar archivos base
-cp "$SCRIPT_DIR/README.md" "$TARGET/" 2>/dev/null || true
-cp "$SCRIPT_DIR/package.json" "$TARGET/" 2>/dev/null || true
-cp "$SCRIPT_DIR/.gitignore" "$TARGET/" 2>/dev/null || true
-cp "$SCRIPT_DIR/install.sh" "$TARGET/" 2>/dev/null || true
+    # Copiar skills
+    for SKILL in "$SKILLS_DIR"/*/; do
+        NAME=$(basename "$SKILL")
+        echo "  Copiando: $NAME..."
+        rm -rf "$TARGET/skills/$NAME"
+        cp -rf "$SKILL" "$TARGET/skills/$NAME"
+        if [ "$TARGET" == "${DETECTED[0]}" ]; then
+            COUNT=$((COUNT + 1))
+        fi
+    done
 
-# Generar CODEX.md si no existe (es local-only, no está en el repo)
-if [ ! -f "$TARGET/CODEX.md" ]; then
-    cat > "$TARGET/CODEX.md" << 'CODEX_EOF'
+    # Copiar archivos base
+    cp "$SCRIPT_DIR/README.md" "$TARGET/" 2>/dev/null || true
+    cp "$SCRIPT_DIR/package.json" "$TARGET/" 2>/dev/null || true
+    cp "$SCRIPT_DIR/.gitignore" "$TARGET/" 2>/dev/null || true
+    cp "$SCRIPT_DIR/install.sh" "$TARGET/" 2>/dev/null || true
+
+    # Generar CODEX.md si no existe (es local-only, no está en el repo)
+    if [ ! -f "$TARGET/CODEX.md" ]; then
+        cat > "$TARGET/CODEX.md" << 'CODEX_EOF'
 # 🧠 OpenSkills: Tactical CODEX (Learning Memory)
 
 This document is the shared, dynamically evolving persistent memory of the OpenSkills agent squad. It prevents re-explaining context, repeating solved problems, and wasting tokens on re-discovery.
@@ -181,9 +188,21 @@ This document is the shared, dynamically evolving persistent memory of the OpenS
 
 - [YYYY-MM-DD] - (Short title) — (What happened, root cause, fix, what to do differently next time.)
 CODEX_EOF
-    echo "  CODEX.md generado por primera vez (local-only)."
-else
-    echo "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)."
+        echo "  CODEX.md generado por primera vez (local-only)."
+    else
+        echo "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)."
+    fi
+done
+
+# Instalar a Claude Code si esta disponible
+if [ -d "$HOME/.claude" ]; then
+    echo "Detectado Claude Code. Copiando skills a: $HOME/.claude/skills/"
+    mkdir -p "$HOME/.claude/skills"
+    for SKILL in "$SKILLS_DIR"/*/; do
+        NAME=$(basename "$SKILL")
+        rm -rf "$HOME/.claude/skills/$NAME"
+        cp -rf "$SKILL" "$HOME/.claude/skills/$NAME"
+    done
 fi
 
 echo ""

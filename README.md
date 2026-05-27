@@ -138,6 +138,49 @@ Luego agrega las rutas a tu configuración:
 }
 ```
 
+
+## Compatibilidad con otras herramientas de IA
+
+Dado que las skills de **OpenSkills** están escritas en Markdown estándar con metadatos YAML, son 100% compatibles e integrables de manera nativa o personalizada con otras herramientas líderes de IA:
+
+### 1. Claude Code (CLI de Anthropic)
+Claude Code soporta la carga global o local de carpetas de skills con formato `SKILL.md` y frontmatter YAML:
+* **Instalación Global:** Los instaladores (`install.ps1` e `install.sh`) detectan automáticamente si tienes Claude Code instalado (`~/.claude`) y copian directamente las skills en `~/.claude/skills/`.
+* **Instalación Manual:** Puedes copiar cualquier carpeta de skill a:
+  * Global (Usuario): `~/.claude/skills/<nombre-skill>/SKILL.md`
+  * Local (Proyecto): `./.claude/skills/<nombre-skill>/SKILL.md`
+
+### 2. Cursor IDE (Rules `.mdc`)
+Cursor permite aplicar reglas automáticamente según los archivos en los que trabajes:
+* Copia cualquier archivo `SKILL.md` al directorio `.cursor/rules/` de tu proyecto y renómbralo con extensión `.mdc`.
+* Agrega las directivas de exclusión/inclusión de archivos en la cabecera del archivo usando glob patterns:
+  ```yaml
+  ---
+  description: Reglas de TDD para el proyecto
+  globs: ["src/**/*.ts", "tests/**/*.ts"]
+  alwaysApply: false
+  ---
+  ```
+
+### 3. GitHub Copilot (`.instructions.md`)
+Copilot Chat lee archivos de instrucciones del sistema en el repositorio:
+* Copia la skill al directorio `.github/instructions/` de tu proyecto y llámala `<nombre-skill>.instructions.md`.
+* Añade la directiva `applyTo` en la cabecera YAML para indicarle qué archivos vigilar:
+  ```markdown
+  ---
+  applyTo:
+    - src/components/**
+    - src/lib/**
+  ---
+  ```
+
+### 4. Aider CLI
+Puedes pasar cualquier skill de OpenSkills directamente a Aider al iniciar la sesión:
+* Inicia Aider con el parámetro de instrucciones:
+  ```bash
+  aider --instructions-file skills/core/code-simplification/SKILL.md
+  ```
+
 ---
 
 ## Uso básico

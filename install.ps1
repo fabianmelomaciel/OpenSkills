@@ -11,17 +11,23 @@ function InstallToDir($target, $source) {
     Write-Host "`nInstalando OpenSkills en: $target" -ForegroundColor Cyan
     New-Item -ItemType Directory -Path $target -Force | Out-Null
     $skillDirs = Get-ChildItem -LiteralPath "$source\skills" -Directory
+    $isClaude = $target.EndsWith(".claude\skills") -or $target.EndsWith(".claude/skills")
     foreach ($skill in $skillDirs) {
-        $destPath = Join-Path -Path "$target\skills" -ChildPath $skill.Name
+        if ($isClaude) {
+            $destPath = Join-Path -Path $target -ChildPath $skill.Name
+        } else {
+            $destPath = Join-Path -Path "$target\skills" -ChildPath $skill.Name
+        }
         Write-Host "  Copiando: $($skill.Name)..." -ForegroundColor Gray
         Remove-Item -LiteralPath $destPath -Recurse -Force -ErrorAction SilentlyContinue
         Copy-Item -LiteralPath $skill.FullName -Destination $destPath -Recurse -Force
     }
-    Copy-Item -LiteralPath "$source\install.ps1" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\install.sh" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\README.md" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\package.json" -Destination "$target\" -Force -ErrorAction SilentlyContinue
-    Copy-Item -LiteralPath "$source\.gitignore" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+    if (-not $isClaude) {
+        Copy-Item -LiteralPath "$source\install.ps1" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+        Copy-Item -LiteralPath "$source\install.sh" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+        Copy-Item -LiteralPath "$source\README.md" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+        Copy-Item -LiteralPath "$source\package.json" -Destination "$target\" -Force -ErrorAction SilentlyContinue
+        Copy-Item -LiteralPath "$source\.gitignore" -Destination "$target\" -Force -ErrorAction SilentlyContinue
     
     # Generar CODEX.md si no existe en destino (es local-only, no está en el repo)
     $codexDest = Join-Path -Path $target -ChildPath "CODEX.md"
@@ -79,6 +85,7 @@ This document is the shared, dynamically evolving persistent memory of the OpenS
         Write-Host "  CODEX.md generado por primera vez (local-only)." -ForegroundColor Gray
     } else {
         Write-Host "  CODEX.md ya existe localmente (memoria de aprendizaje conservada)." -ForegroundColor Yellow
+    }
     }
     Write-Host "  Listo: $($skillDirs.Count) skills instaladas" -ForegroundColor Green
 }
@@ -170,6 +177,9 @@ if (-not $TargetDir) {
     }
     if (Test-Path -LiteralPath "$env:USERPROFILE\.gemini\config") {
         $detected += @{ Name = "antigravity (gemini)"; Path = $antigravityGeminiDir }
+    }
+    if (Test-Path -LiteralPath "$env:USERPROFILE\.claude") {
+        $detected += @{ Name = "claude-code"; Path = "$env:USERPROFILE\.claude\skills" }
     }
 
     if ($detected.Count -eq 0) {
