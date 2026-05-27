@@ -15,11 +15,15 @@ Funciona de manera autónoma con **opencode** y **antigravity**.
 | Skill | Uso |
 |-------|-----|
 | `brainstorming` | Diseñar features antes de codificar |
+| `spec-driven-development` | Definir requerimientos y especificaciones antes de codificar |
 | `writing-plans` | Crear planes de implementación detallados |
+| `incremental-implementation` | Implementar en rebanadas verticales de forma segura |
 | `test-driven-development` | TDD disciplina (red-green-refactor) |
+| `context-engineering` | Optimizar el contexto y evitar context flooding |
 | `subagent-driven-development` | Ejecutar planes con subagentes + review |
 | `executing-plans` | Ejecutar planes en lote con checkpoints |
 | `systematic-debugging` | Debuggear bugs sistemáticamente |
+| `code-simplification` | Reducir la complejidad y aplicar Chesterton's Fence |
 | `verification-before-completion` | Verificar antes de decir "está listo" |
 | `finishing-a-development-branch` | Completar ramas de desarrollo |
 | `requesting-code-review` | Solicitar code review |

@@ -39,6 +39,16 @@ PM (YOU):
 | **Large** (cross-cutting) | Sequential delegation with reviews |
 | **Unknown** | Brainstorm first |
 
+## Core Skills Integration
+
+You and your subagents MUST leverage the core SDLC skills when planning, writing code, refactoring, and verifying:
+
+1. **Spec & Requirements Definition:** Use the `spec-driven-development` skill when defining requirements, resolving ambiguity, reframing goals into testable success criteria, and clarifying assumptions with the CEO *before* starting any tasks.
+2. **Decomposition & Slicing:** Follow the `writing-plans` skill structure to write the plan, decomposing features into vertical slices, contract-first, or risk-first steps.
+3. **Execution & Increments:** Delegate tasks instructing the subagents to strictly follow `incremental-implementation` (thin vertical slices, scope discipline, Rule 0 and 0.5) and `test-driven-development` (verify-as-you-go, red-green-refactor).
+4. **Code Quality & Simplicity:** When writing or reviewing code, apply `code-simplification` to reduce nesting, name variables/functions clearly, avoid over-engineering, and enforce Chesterton's Fence.
+5. **Context & Token Economy:** Apply `context-engineering` to manage the context hierarchy, avoid context flooding, and resolve conflicting specs via the confusion management patterns.
+
 ## Delegation Protocol
 
 When using `task` tool to delegate:

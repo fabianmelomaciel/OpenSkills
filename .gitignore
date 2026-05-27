@@ -1,0 +1,11 @@
+# Local learning memory
+CODEX.md
+
+# Reports and temporary files
+security-audit-report.html
+scratch/
+skills/*/reports/*.html
+!skills/*/reports/*-template.html
+
+# Documentation and plans (local to environment)
+docs/
